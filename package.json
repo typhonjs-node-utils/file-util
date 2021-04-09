@@ -1,0 +1,45 @@
+{
+  "name": "@typhonjs-node-utils/file-util",
+  "description": "Provides several utility functions for working with the file system including archiving and a TyphonJS plugin.",
+  "version": "0.0.0",
+  "author": "typhonrt",
+  "type": "module",
+  "main": "src/FileUtilFunctions.js",
+  "module": "src/FileUtilFunctions.js",
+  "exports": {
+    ".": "./src/FileUtilFunctions.js",
+    "./plugin": "./src/FileUtilPlugin.js"
+  },
+  "maintainers": [
+    {
+      "name": "Michael Leahy",
+      "email": "support@typhonjs.io",
+      "url": "https://github.com/typhonrt"
+    }
+  ],
+  "devDependencies": {
+    "@typhonjs-node-utils/build-test": "^0.1.0"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "/npm-shrinkwrap.json",
+    "/src"
+  ],
+  "homepage": "https://github.com/typhonjs-node-utils/file-util",
+  "keywords": [
+    "typhonjs",
+    "file",
+    "util"
+  ],
+  "license": "MPL-2.0",
+  "bugs": "https://github.com/typhonjs-node-utils/file-util/issues",
+  "repository": "typhonjs-node-utils/file-util",
+  "scripts": {
+    "eslint": "eslint .",
+    "posttest": "npm run eslint",
+    "prepublishOnly": "npm run test",
+    "test": "c8 --reporter=lcov --reporter=text-summary mocha -colors \"test/src/**/*.test.js\""
+  }
+}
