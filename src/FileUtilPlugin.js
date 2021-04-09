@@ -7,7 +7,7 @@ import * as FUF from './FileUtilFunctions.js';
  *
  * @see https://www.npmjs.com/package/typhonjs-plugin-manager
  */
-export default function onPluginLoad(ev)
+export function onPluginLoad(ev)
 {
    const eventbus = ev.eventbus;
 
