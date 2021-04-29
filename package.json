@@ -1,8 +1,8 @@
 {
-  "name": "@typhonjs-node-utils/file-util",
+  "name": "@typhonjs-utils/file-util",
   "description": "Provides several utility functions for working with the file system including archiving and a TyphonJS plugin.",
   "version": "0.0.0",
-  "author": "typhonrt",
+  "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
   "main": "src/FileUtilFunctions.js",
   "module": "src/FileUtilFunctions.js",
@@ -10,15 +10,11 @@
     ".": "./src/FileUtilFunctions.js",
     "./plugin": "./src/FileUtilPlugin.js"
   },
-  "maintainers": [
-    {
-      "name": "Michael Leahy",
-      "email": "support@typhonjs.io",
-      "url": "https://github.com/typhonrt"
-    }
+  "contributors": [
+    "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)"
   ],
   "devDependencies": {
-    "@typhonjs-node-utils/build-test": "^0.1.0"
+    "@typhonjs-utils/build-test": "^0.1.0"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -35,7 +31,7 @@
   ],
   "license": "MPL-2.0",
   "bugs": "https://github.com/typhonjs-node-utils/file-util/issues",
-  "repository": "typhonjs-node-utils/file-util",
+  "repository": "github:typhonjs-node-utils/file-util",
   "scripts": {
     "eslint": "eslint .",
     "posttest": "npm run eslint",
