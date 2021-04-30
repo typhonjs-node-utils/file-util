@@ -7,6 +7,117 @@ import { fileURLToPath } from 'url';
  */
 
 /**
+ * Finds the common base path of a collection of paths.
+ *
+ * @param {string[]} paths - Paths to find a common base path.
+ *
+ * @returns {string} The common base path.
+ */
+export function commonPath(...paths)
+{
+   if (!Array.isArray(paths)) { throw new TypeError(`'paths' is not an 'array'.`); }
+
+   let commonPath = '';
+
+   const folders = [];
+
+   for (let i = 0; i < paths.length; i++)
+   {
+      if (typeof paths[i] === 'string')
+      {
+         folders.push(paths[i].split(path.sep));     // Split on file separator.
+      }
+   }
+
+   if (folders.length === 0) { return commonPath; }
+
+   for (let j = 0; j < folders[0].length; j++)
+   {
+      const thisFolder = folders[0][j];         // Assign the next folder name in the first path.
+      let allMatched = true;                    // Assume all have matched in case there are no more paths.
+
+      for (let i = 1; i < folders.length && allMatched; i++)   // Look at the other paths.
+      {
+         if (folders[i].length < j)             // If there is no folder here.
+         {
+            allMatched = false;                 // No match.
+            break;                              // Reached end of folders.
+         }
+
+         allMatched &= folders[i][j] === thisFolder; // Check if it matched.
+      }
+
+      if (allMatched)                           // If they all matched this folder name.
+      {
+         commonPath += `${thisFolder}${path.sep}`; // Add it to the common path.
+      }
+      else
+      {
+         break;                                 // Stop looking
+      }
+   }
+
+   return commonPath;
+}
+
+/**
+ * Finds the common base path of a collection of paths.
+ *
+ * @param {string}   key - A key to index into each object.
+ *
+ * @param {object[]} map - Objects containing a key to holding a path.
+ *
+ * @returns {string} The common base path.
+ */
+export function commonMappedPath(key, ...map)
+{
+   if (typeof key !== 'string') { throw new TypeError(`'key' is not a 'string'.`); }
+   if (!Array.isArray(map)) { throw new TypeError(`'map' is not an 'array'.`); }
+
+   let commonPath = '';
+
+   const folders = [];
+
+   for (let i = 0; i < map.length; i++)
+   {
+      if (typeof map[i][key] === 'string')
+      {
+         folders.push(map[i][key].split(path.sep)); // Split on file separator.
+      }
+   }
+
+   if (folders.length === 0) { return commonPath; }
+
+   for (let j = 0; j < folders[0].length; j++)
+   {
+      const thisFolder = folders[0][j];         // Assign the next folder name in the first path.
+      let allMatched = true;                    // Assume all have matched in case there are no more paths.
+
+      for (let i = 1; i < folders.length && allMatched; i++)   // Look at the other paths.
+      {
+         if (folders[i].length < j)             // If there is no folder here.
+         {
+            allMatched = false;                 // No match.
+            break;                              // Reached end of folders.
+         }
+
+         allMatched &= folders[i][j] === thisFolder; // Check if it matched.
+      }
+
+      if (allMatched)                           // If they all matched this folder name.
+      {
+         commonPath += `${thisFolder}${path.sep}`;        // Add it to the common path.
+      }
+      else
+      {
+         break;                                 // Stop looking
+      }
+   }
+
+   return commonPath;
+}
+
+/**
  * Returns an array of all absolute directory paths found from walking the directory indicated.
  *
  * @param {object}   options - An options object.

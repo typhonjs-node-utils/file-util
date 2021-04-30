@@ -13,14 +13,16 @@ export default class FileUtilPlugin
    {
       const eventbus = ev.eventbus;
 
-      eventbus.on(`typhonjs:util:file:dir:walk`, FUF.walkDir);
-      eventbus.on(`typhonjs:util:file:file:has`, FUF.hasFile);
-      eventbus.on(`typhonjs:util:file:files:walk`, FUF.walkFiles);
-      eventbus.on(`typhonjs:util:file:list:dir:get`, FUF.getDirList);
-      eventbus.on(`typhonjs:util:file:list:file:get`, FUF.getFileList);
-      eventbus.on(`typhonjs:util:file:path:relative:get`, FUF.getRelativePath);
-      eventbus.on(`typhonjs:util:file:sort:path`, FUF.pathSort);
-      eventbus.on(`typhonjs:util:file:url:path:dir:get`, FUF.getURLDirpath);
-      eventbus.on(`typhonjs:util:file:url:path:file:get`, FUF.getURLFilepath);
+      eventbus.on(`typhonjs:utils:file:dir:walk`, FUF.walkDir, void 0, true);
+      eventbus.on(`typhonjs:utils:file:file:has`, FUF.hasFile, void 0, true);
+      eventbus.on(`typhonjs:utils:file:files:walk`, FUF.walkFiles, void 0, true);
+      eventbus.on(`typhonjs:utils:file:list:dir:get`, FUF.getDirList, void 0, true);
+      eventbus.on(`typhonjs:utils:file:list:file:get`, FUF.getFileList, void 0, true);
+      eventbus.on(`typhonjs:utils:file:path:common`, FUF.commonPath, void 0, true);
+      eventbus.on(`typhonjs:utils:file:path:common:mapped`, FUF.commonMappedPath, void 0, true);
+      eventbus.on(`typhonjs:utils:file:path:relative:get`, FUF.getRelativePath, void 0, true);
+      eventbus.on(`typhonjs:utils:file:sort:path`, FUF.pathSort, void 0, true);
+      eventbus.on(`typhonjs:utils:file:url:path:dir:get`, FUF.getURLDirpath, void 0, true);
+      eventbus.on(`typhonjs:utils:file:url:path:file:get`, FUF.getURLFilepath, void 0, true);
    }
 }
