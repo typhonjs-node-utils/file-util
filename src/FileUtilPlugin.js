@@ -5,9 +5,9 @@ export default class FileUtilPlugin
    /**
     * Wires up FileUtil functions on the plugin eventbus.
     *
-    * @param {object} ev - PluginEvent - The plugin event.
+    * @param {object} ev - PluginInvokeEvent - The plugin event.
     *
-    * @see https://www.npmjs.com/package/typhonjs-plugin-manager
+    * @see https://www.npmjs.com/package/@typhonjs-plugin/manager
     */
    static onPluginLoad(ev)
    {
