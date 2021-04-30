@@ -1,6 +1,6 @@
 {
   "name": "@typhonjs-utils/file-util",
-  "description": "Provides several utility functions for working with the file system including archiving and a TyphonJS plugin.",
+  "description": "Provides several utility functions for working with the file system including a TyphonJS plugin.",
   "version": "0.0.1",
   "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
