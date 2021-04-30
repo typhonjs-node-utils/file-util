@@ -25,8 +25,8 @@
   "homepage": "https://github.com/typhonjs-node-utils/file-util",
   "keywords": [
     "typhonjs",
-    "file",
-    "util"
+    "utils",
+    "file"
   ],
   "license": "MPL-2.0",
   "bugs": "https://github.com/typhonjs-node-utils/file-util/issues",
