@@ -1,4 +1,4 @@
-import * as FUF from './FileUtilFunctions.js';
+import * as FUF from './functions.js';
 
 export default class FileUtilPlugin
 {
