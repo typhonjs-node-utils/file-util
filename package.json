@@ -4,11 +4,10 @@
   "version": "0.0.0",
   "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
-  "main": "src/FileUtilFunctions.js",
-  "module": "src/FileUtilFunctions.js",
+  "main": "src/index.js",
+  "module": "src/index.js",
   "exports": {
-    ".": "./src/FileUtilFunctions.js",
-    "./plugin": "./src/FileUtilPlugin.js"
+    ".": "./src/index.js"
   },
   "contributors": [
     "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)"
