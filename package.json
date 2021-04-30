@@ -1,7 +1,7 @@
 {
   "name": "@typhonjs-utils/file-util",
   "description": "Provides several utility functions for working with the file system including archiving and a TyphonJS plugin.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
   "main": "src/index.js",
@@ -34,7 +34,6 @@
   "scripts": {
     "eslint": "eslint .",
     "posttest": "npm run eslint",
-    "prepublishOnly": "npm run test",
     "test": "c8 --reporter=lcov --reporter=text-summary mocha -colors \"test/src/**/*.test.js\""
   }
 }
