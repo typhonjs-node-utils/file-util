@@ -1,6 +1,7 @@
 import fs                from 'fs';
-import path              from 'path';
 import { fileURLToPath } from 'url';
+
+import upath             from 'upath';
 
 /**
  * Provides a few utility functions to work with files / directories.
@@ -9,9 +10,9 @@ import { fileURLToPath } from 'url';
 /**
  * Finds the common base path of a collection of paths.
  *
- * @param {string[]} paths - Paths to find a common base path.
+ * @param {...string} paths - Paths to find a common base path.
  *
- * @returns {string} The common base path.
+ * @returns {string} The common base path (Unix)
  */
 export function commonPath(...paths)
 {
@@ -19,13 +20,15 @@ export function commonPath(...paths)
 
    let commonPath = '';
 
+   const unixPaths = paths.map((entry) => upath.toUnix(entry));
+
    const folders = [];
 
-   for (let i = 0; i < paths.length; i++)
+   for (let i = 0; i < unixPaths.length; i++)
    {
       if (typeof paths[i] === 'string')
       {
-         folders.push(paths[i].split(path.sep));     // Split on file separator.
+         folders.push(paths[i].split(upath.sep));     // Split on file separator.
       }
    }
 
@@ -49,7 +52,7 @@ export function commonPath(...paths)
 
       if (allMatched)                           // If they all matched this folder name.
       {
-         commonPath += `${thisFolder}${path.sep}`; // Add it to the common path.
+         commonPath += `${thisFolder}${upath.sep}`; // Add it to the common path.
       }
       else
       {
@@ -65,7 +68,7 @@ export function commonPath(...paths)
  *
  * @param {string}   key - A key to index into each object.
  *
- * @param {object[]} map - Objects containing a key to holding a path.
+ * @param {...object} map - Objects containing a key to holding a path.
  *
  * @returns {string} The common base path.
  */
@@ -82,7 +85,7 @@ export function commonMappedPath(key, ...map)
    {
       if (typeof map[i][key] === 'string')
       {
-         folders.push(map[i][key].split(path.sep)); // Split on file separator.
+         folders.push(map[i][key].split(upath.sep)); // Split on file separator.
       }
    }
 
@@ -106,7 +109,7 @@ export function commonMappedPath(key, ...map)
 
       if (allMatched)                           // If they all matched this folder name.
       {
-         commonPath += `${thisFolder}${path.sep}`;        // Add it to the common path.
+         commonPath += `${thisFolder}${upath.sep}`;        // Add it to the common path.
       }
       else
       {
@@ -136,7 +139,7 @@ export async function getDirList({ dir = '.', skipDir = new Set(), sort = true }
 
    for await (const p of walkDir(dir, skipDir))
    {
-      results.push(path.resolve(p));
+      results.push(upath.resolve(p));
    }
 
    return sort ? pathSort(results) : results;
@@ -161,7 +164,7 @@ export async function getFileList({ dir = '.', skipDir = new Set(), sort = true 
 
    for await (const p of walkFiles(dir, skipDir))
    {
-      results.push(path.resolve(p));
+      results.push(upath.resolve(p));
    }
 
    return sort ? pathSort(results) : results;
@@ -175,17 +178,17 @@ export async function getFileList({ dir = '.', skipDir = new Set(), sort = true 
  *
  * @param {string}   filePath - The relative path to adjust from `basePath`.
  *
- * @returns {string} A relative path based on `basePath` and `filePath`.
+ * @returns {string} A relative path based on `basePath` and `filePath`. (Unix)
  */
 export function getRelativePath(basePath, filePath)
 {
-   let returnPath = filePath;
+   let returnPath = upath.toUnix(filePath);
 
    // Get the relative path and append `./` if necessary.
    if (filePath.startsWith(basePath))
    {
-      returnPath = path.relative(basePath, filePath);
-      returnPath = returnPath.startsWith('.') ? returnPath : `.${path.sep}${returnPath}`;
+      returnPath = upath.relative(basePath, filePath);
+      returnPath = returnPath.startsWith('.') ? returnPath : `.${upath.sep}${returnPath}`;
    }
 
    return returnPath;
@@ -202,7 +205,7 @@ export function getRelativePath(basePath, filePath)
  */
 export function getURLDirpath(url, ...resolvePaths)
 {
-   return path.resolve(path.dirname(fileURLToPath(url)), ...resolvePaths);
+   return upath.resolve(upath.dirname(fileURLToPath(url)), ...resolvePaths);
 }
 
 /**
@@ -239,7 +242,7 @@ export async function hasFile({ dir = '.', fileList, skipDir = new Set() } = {})
 
    for await (const p of walkFiles(dir, skipDir))
    {
-      if (fileList.has(path.basename(p)))
+      if (fileList.has(upath.basename(p)))
       {
          return true;
       }
@@ -254,11 +257,12 @@ export async function hasFile({ dir = '.', fileList, skipDir = new Set() } = {})
  *
  * @param {string}   [sep=path.sep] - A string path separator.
  *
- * @returns {*} Sorted array of string paths.
+ * @returns {*} Sorted array of string paths (Unix).
  */
-export function pathSort(paths, sep = path.sep)
+export function pathSort(paths, sep = upath.sep)
 {
-   return paths.map((elem) => elem.split(sep)).sort(s_SORTER).map((elem) => elem.join(sep));
+   const unixPaths = paths.map((entry) => upath.toUnix(entry));
+   return unixPaths.map((elem) => elem.split(sep)).sort(s_SORTER).map((elem) => elem.join(sep));
 }
 
 /**
@@ -283,7 +287,7 @@ export async function *walkDir(dir, skipDir = new Set())
          continue;
       }
 
-      const entry = path.join(dir, d.name);
+      const entry = upath.join(dir, d.name);
 
       if (d.isDirectory())
       {
@@ -315,7 +319,7 @@ export async function *walkFiles(dir, skipDir = new Set())
          continue;
       }
 
-      const entry = path.join(dir, d.name);
+      const entry = upath.join(dir, d.name);
 
       if (d.isDirectory())
       {
