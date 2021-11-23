@@ -12,11 +12,13 @@ import upath             from 'upath';
  *
  * @param {...string} paths - Paths to find a common base path.
  *
- * @returns {string} The common base path (Unix)
+ * @returns {string} The common base path. (Unix)
  */
 export function commonPath(...paths)
 {
    if (!Array.isArray(paths)) { throw new TypeError(`'paths' is not an 'array'.`); }
+
+   if (paths.length <= 1) { return ''; }
 
    let commonPath = '';
 
