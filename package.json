@@ -7,8 +7,15 @@
   "main": "src/functions.js",
   "module": "src/functions.js",
   "exports": {
-    ".": "./src/functions.js",
-    "./plugin": "./src/plugin.js"
+    "./package.json": "./package.json",
+    ".": {
+      "browser": "./src/functions-browser.js",
+      "node": "./src/index.js"
+    },
+    "./plugin": {
+       "browser": "./src/plugin-browser.js",
+       "node": "./src/plugin.js"
+    }
   },
   "contributors": [
     "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)"
