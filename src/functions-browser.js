@@ -102,8 +102,7 @@ export function commonMappedPath(key, ...map)
    {
       if (typeof map[i][key] === 'string')
       {
-         // TODO: Validate on Windows as toUnix likely needs to be used here.
-         folders.push(map[i][key].split(s_SEP)); // Split on file separator.
+         folders.push(toUnix(map[i][key]).split(s_SEP)); // Split on file separator.
       }
    }
 
