@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url';
 
 import upath             from 'upath';
 
+import { pathSort }      from './functions-browser.js';
+
 /**
  * Provides a few utility functions to work with files / directories.
  */
