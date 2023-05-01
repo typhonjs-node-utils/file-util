@@ -1,14 +1,35 @@
-import fs                from 'fs';
-import { fileURLToPath } from 'url';
-
-import upath             from 'upath';
-
-import { pathSort }      from './functions-browser.js';
+/**
+ * Finds the common base path of a collection of paths.
+ *
+ * @param {...string} paths - Paths to find a common base path.
+ *
+ * @returns {string} The common base path. (Unix)
+ */
+declare function commonPath(...paths: string[]): string;
+/**
+ * Finds the common base path of a collection of paths.
+ *
+ * @param {string}   key - A key to index into each object.
+ *
+ * @param {...object} map - Objects containing a key to holding a path.
+ *
+ * @returns {string} The common base path.
+ */
+declare function commonMappedPath(key: string, ...map: object[]): string;
+/**
+ * Sorts an array of file / dir paths.
+ *
+ * @param {string[]} paths - Array of string paths.
+ *
+ * @param {string}   [sep='/'] - A string path separator.
+ *
+ * @returns {*} Sorted array of string paths (Unix).
+ */
+declare function pathSort(paths: string[], sep?: string): any;
 
 /**
  * Provides a few utility functions to work with files / directories.
  */
-
 /**
  * Returns an array of all absolute directory paths found from walking the directory indicated.
  *
@@ -22,18 +43,11 @@ import { pathSort }      from './functions-browser.js';
  *
  * @returns {Promise<Array>} An array of directories.
  */
-export async function getDirList({ dir = '.', skipDir = new Set(), sort = true } = {})
-{
-   const results = [];
-
-   for await (const p of walkDir(dir, skipDir))
-   {
-      results.push(upath.resolve(p));
-   }
-
-   return sort ? pathSort(results) : results;
-}
-
+declare function getDirList({ dir, skipDir, sort }?: {
+    dir?: string;
+    skipDir?: Set<string>;
+    sort?: boolean;
+}): Promise<any[]>;
 /**
  * Returns an array of all absolute file paths found from walking the directory tree indicated.
  *
@@ -47,18 +61,11 @@ export async function getDirList({ dir = '.', skipDir = new Set(), sort = true }
  *
  * @returns {Promise<Array>} An array of file paths.
  */
-export async function getFileList({ dir = '.', skipDir = new Set(), sort = true } = {})
-{
-   const results = [];
-
-   for await (const p of walkFiles(dir, skipDir))
-   {
-      results.push(upath.resolve(p));
-   }
-
-   return sort ? pathSort(results) : results;
-}
-
+declare function getFileList({ dir, skipDir, sort }?: {
+    dir?: string;
+    skipDir?: Set<string>;
+    sort?: boolean;
+}): Promise<any[]>;
 /**
  * Given a base path and a file path this method will return a relative path if the file path includes the base
  * path otherwise the full absolute file path is returned.
@@ -69,20 +76,7 @@ export async function getFileList({ dir = '.', skipDir = new Set(), sort = true 
  *
  * @returns {string} A relative path based on `basePath` and `filePath`. (Unix)
  */
-export function getRelativePath(basePath, filePath)
-{
-   let returnPath = upath.toUnix(filePath);
-
-   // Get the relative path and append `./` if necessary.
-   if (filePath.startsWith(basePath))
-   {
-      returnPath = upath.relative(basePath, filePath);
-      returnPath = returnPath.startsWith('.') ? returnPath : `.${upath.sep}${returnPath}`;
-   }
-
-   return returnPath;
-}
-
+declare function getRelativePath(basePath: string, filePath: string): string;
 /**
  * Convenience method to covert a file URL into the file path of the directory
  *
@@ -92,11 +86,7 @@ export function getRelativePath(basePath, filePath)
  *
  * @returns {string} A file path based on `url` and any `resolvePaths`.
  */
-export function getURLDirpath(url, ...resolvePaths)
-{
-   return upath.resolve(upath.dirname(fileURLToPath(url)), ...resolvePaths);
-}
-
+declare function getURLDirpath(url: string, ...resolvePaths: string[]): string;
 /**
  * Convenience method to convert a file URL into a file path.
  *
@@ -104,11 +94,7 @@ export function getURLDirpath(url, ...resolvePaths)
  *
  * @returns {string} A file path from `url`.
  */
-export function getURLFilepath(url)
-{
-   return fileURLToPath(url);
-}
-
+declare function getURLFilepath(url: string): string;
 /**
  * Searches all files from starting directory skipping any directories in `skipDir` and those starting with `.`
  * in an attempt to locate a Babel configuration file. If a Babel configuration file is found `true` is
@@ -124,21 +110,11 @@ export function getURLFilepath(url)
  *
  * @returns {Promise<boolean>} Whether a Babel configuration file was found.
  */
-export async function hasFile({ dir = '.', fileList, skipDir = new Set() } = {})
-{
-   if (!(fileList instanceof Set)) { throw new TypeError(`'fileList' is not a 'Set'`); }
-   if (!(skipDir instanceof Set)) { throw new TypeError(`'skipDir' is not a 'Set'`); }
-
-   for await (const p of walkFiles(dir, skipDir))
-   {
-      if (fileList.has(upath.basename(p)))
-      {
-         return true;
-      }
-   }
-   return false;
-}
-
+declare function hasFile({ dir, fileList, skipDir }?: {
+    fileList: Set<any>;
+    dir?: string;
+    skipDir?: Set<any>;
+}): Promise<boolean>;
 /**
  * A generator function that walks the local file tree.
  *
@@ -148,28 +124,7 @@ export async function hasFile({ dir = '.', fileList, skipDir = new Set() } = {})
  *
  * @yields {string}
  */
-export async function *walkDir(dir, skipDir = new Set())
-{
-   if (!(skipDir instanceof Set)) { throw new TypeError(`'skipDir' is not a 'Set'`); }
-
-   for await (const d of await fs.promises.opendir(dir))
-   {
-      // Skip directories in `skipMap` or any hidden directories (starts w/ `.`).
-      if (d.isDirectory() && (skipDir.has(d.name) || d.name.startsWith('.')))
-      {
-         continue;
-      }
-
-      const entry = upath.join(dir, d.name);
-
-      if (d.isDirectory())
-      {
-         yield entry;
-         yield* walkDir(entry, skipDir);
-      }
-   }
-}
-
+declare function walkDir(dir: string, skipDir?: Set<string>): any;
 /**
  * A generator function that walks the local file tree.
  *
@@ -179,27 +134,6 @@ export async function *walkDir(dir, skipDir = new Set())
  *
  * @yields {string}
  */
-export async function *walkFiles(dir, skipDir = new Set())
-{
-   if (!(skipDir instanceof Set)) { throw new TypeError(`'skipDir' is not a 'Set'`); }
+declare function walkFiles(dir: string, skipDir?: Set<string>): any;
 
-   for await (const d of await fs.promises.opendir(dir))
-   {
-      // Skip directories in `skipMap` or any hidden directories (starts w/ `.`).
-      if (d.isDirectory() && (skipDir.has(d.name) || d.name.startsWith('.')))
-      {
-         continue;
-      }
-
-      const entry = upath.join(dir, d.name);
-
-      if (d.isDirectory())
-      {
-         yield* walkFiles(entry, skipDir);
-      }
-      else if (d.isFile())
-      {
-         yield entry;
-      }
-   }
-}
+export { commonMappedPath, commonPath, getDirList, getFileList, getRelativePath, getURLDirpath, getURLFilepath, hasFile, pathSort, walkDir, walkFiles };

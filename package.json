@@ -1,21 +1,25 @@
 {
   "name": "@typhonjs-utils/file-util",
   "description": "Provides several utility functions for working with the file system including a TyphonJS plugin.",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
-  "main": "src/functions.js",
-  "module": "src/functions.js",
   "exports": {
-    "./package.json": "./package.json",
     ".": {
-      "browser": "./src/functions-browser.js",
-      "node": "./src/index.js"
+      "browser": {
+        "types": "./types/index-browser.d.ts",
+        "import": "./src/functions-browser.js"
+      },
+      "node": {
+        "types": "./types/index.d.ts",
+        "import": "./src/index.js"
+      }
     },
     "./plugin": {
        "browser": "./src/plugin-browser.js",
        "node": "./src/plugin.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "contributors": [
     "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)"
@@ -24,14 +28,16 @@
     "upath": "^2"
   },
   "devDependencies": {
-    "@typhonjs-utils/build-test": "^0.1.0"
+    "@typhonjs-build-test/node": "^0.0.4",
+    "@typhonjs-build-test/esm-d-ts": "^0.0.19"
   },
   "engines": {
     "node": ">=12.0.0"
   },
   "files": [
     "/npm-shrinkwrap.json",
-    "/src"
+    "/src",
+    "/types"
   ],
   "homepage": "https://github.com/typhonjs-node-utils/file-util#readme",
   "keywords": [
@@ -45,6 +51,7 @@
   "scripts": {
     "eslint": "eslint .",
     "posttest": "npm run eslint",
-    "test": "c8 --reporter=lcov --reporter=text-summary mocha -colors \"test/src/**/*.test.js\""
+    "test": "c8 --reporter=lcov --reporter=text-summary mocha -colors \"test/src/**/*.test.js\"",
+    "types": "node -e \"import('@typhonjs-build-test/esm-d-ts').then(module => { module.generateDTS({ input: './src/index.js', output: './types/index.d.ts' }); module.generateDTS({ input: './src/functions-browser.js', output: './types/index-browser.d.ts' }) });\""
   }
 }
