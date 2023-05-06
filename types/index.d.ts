@@ -55,17 +55,26 @@ declare function getDirList({ dir, skipDir, sort }?: {
  *
  * @param {string}      [options.dir='.'] - Directory to walk; default is CWD.
  *
+ * @param {Set<string>} [options.ext] - A set of file extensions to include.
+ *
  * @param {Set<string>} [options.skipDir] - A Set of directory names to skip walking.
+ *
+ * @param {string}      [options.skipEndsWith] - A string to exclude all paths that end with the given value.
+ *
+ * @param {Set<string>} [options.skipExt] - A Set of file extensions to exclude.
  *
  * @param {boolean}     [options.sort=true] - Sort output array.
  *
- * @returns {Promise<Array>} An array of file paths.
+ * @returns {Promise<string[]>} An array of resolved file paths.
  */
-declare function getFileList({ dir, skipDir, sort }?: {
+declare function getFileList({ dir, ext, skipDir, skipEndsWith, skipExt, sort }?: {
     dir?: string;
+    ext?: Set<string>;
     skipDir?: Set<string>;
+    skipEndsWith?: string;
+    skipExt?: Set<string>;
     sort?: boolean;
-}): Promise<any[]>;
+}): Promise<string[]>;
 /**
  * Given a base path and a file path this method will return a relative path if the file path includes the base
  * path otherwise the full absolute file path is returned.
@@ -80,21 +89,21 @@ declare function getRelativePath(basePath: string, filePath: string): string;
 /**
  * Convenience method to covert a file URL into the file path of the directory
  *
- * @param {string} url - A file URL
+ * @param {string | URL} url - A file URL
  *
  * @param {...string} resolvePaths - An optional list of paths to resolve against the dir path.
  *
  * @returns {string} A file path based on `url` and any `resolvePaths`.
  */
-declare function getURLDirpath(url: string, ...resolvePaths: string[]): string;
+declare function getURLDirpath(url: string | URL, ...resolvePaths: string[]): string;
 /**
  * Convenience method to convert a file URL into a file path.
  *
- * @param {string} url - A file URL
+ * @param {string | URL} url - A file URL
  *
  * @returns {string} A file path from `url`.
  */
-declare function getURLFilepath(url: string): string;
+declare function getURLFilepath(url: string | URL): string;
 /**
  * Searches all files from starting directory skipping any directories in `skipDir` and those starting with `.`
  * in an attempt to locate a Babel configuration file. If a Babel configuration file is found `true` is
