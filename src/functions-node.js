@@ -1,5 +1,5 @@
-import fs                from 'fs';
-import { fileURLToPath } from 'url';
+import fs                from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 import upath             from 'upath';
 
@@ -24,6 +24,10 @@ import { pathSort }      from './functions-browser.js';
  */
 export async function getDirList({ dir = '.', skipDir = new Set(), sort = true } = {})
 {
+   if (typeof dir !== 'string') { throw new TypeError(`'dir' is not a string.`); }
+   if (!(skipDir instanceof Set)) { throw new TypeError(`'skipDir' is not a Set.`); }
+   if (typeof sort !== 'boolean') { throw new TypeError(`'sort' is not a boolean.`); }
+
    const results = [];
 
    for await (const p of walkDir(dir, skipDir))
@@ -41,19 +45,61 @@ export async function getDirList({ dir = '.', skipDir = new Set(), sort = true }
  *
  * @param {string}      [options.dir='.'] - Directory to walk; default is CWD.
  *
+ * @param {Set<string>} [options.ext] - A set of file extensions to include.
+ *
  * @param {Set<string>} [options.skipDir] - A Set of directory names to skip walking.
+ *
+ * @param {string}      [options.skipEndsWith] - A string to exclude all paths that end with the given value.
+ *
+ * @param {Set<string>} [options.skipExt] - A Set of file extensions to exclude.
  *
  * @param {boolean}     [options.sort=true] - Sort output array.
  *
- * @returns {Promise<Array>} An array of file paths.
+ * @returns {Promise<string[]>} An array of resolved file paths.
  */
-export async function getFileList({ dir = '.', skipDir = new Set(), sort = true } = {})
+export async function getFileList({ dir = '.', ext, skipDir = new Set(), skipEndsWith, skipExt, sort = true } = {})
 {
+   if (typeof dir !== 'string') { throw new TypeError(`'dir' is not a string.`); }
+   if (ext !== void 0 && !(ext instanceof Set)) { throw new TypeError(`'ext' is not a Set.`); }
+   if (!(skipDir instanceof Set)) { throw new TypeError(`'skipDir' is not a Set.`); }
+   if (skipExt !== void 0 && !(skipExt instanceof Set)) { throw new TypeError(`'skipExt' is not a Set.`); }
+   if (typeof sort !== 'boolean') { throw new TypeError(`'sort' is not a boolean.`); }
+   if (skipEndsWith !== void 0 && typeof skipEndsWith !== 'string')
+   {
+      throw new TypeError(`'skipEndsWith' is not a string.`);
+   }
+
    const results = [];
 
-   for await (const p of walkFiles(dir, skipDir))
+   if (ext && skipExt)
    {
-      results.push(upath.resolve(p));
+      for await (const p of walkFiles(dir, skipDir))
+      {
+         const extension = upath.extname(p);
+         if (ext.has(extension) && !skipExt.has(extension)) { results.push(upath.resolve(p)); }
+      }
+   }
+   else if (ext)
+   {
+      for await (const p of walkFiles(dir, skipDir))
+      {
+         if (ext.has(upath.extname(p))) { results.push(upath.resolve(p)); }
+      }
+   }
+   else
+   {
+      for await (const p of walkFiles(dir, skipDir))
+      {
+         results.push(upath.resolve(p));
+      }
+   }
+
+   if (skipEndsWith)
+   {
+      for (let cntr = results.length; --cntr >= 0;)
+      {
+         if (results[cntr].endsWith(skipEndsWith)) { results.splice(cntr, 1); }
+      }
    }
 
    return sort ? pathSort(results) : results;
@@ -71,6 +117,9 @@ export async function getFileList({ dir = '.', skipDir = new Set(), sort = true 
  */
 export function getRelativePath(basePath, filePath)
 {
+   if (typeof basePath !== 'string') { throw new TypeError(`'basePath' is not a string.`); }
+   if (typeof filePath !== 'string') { throw new TypeError(`'filePath' is not a string.`); }
+
    let returnPath = upath.toUnix(filePath);
 
    // Get the relative path and append `./` if necessary.
@@ -86,7 +135,7 @@ export function getRelativePath(basePath, filePath)
 /**
  * Convenience method to covert a file URL into the file path of the directory
  *
- * @param {string} url - A file URL
+ * @param {string | URL} url - A file URL
  *
  * @param {...string} resolvePaths - An optional list of paths to resolve against the dir path.
  *
@@ -94,18 +143,22 @@ export function getRelativePath(basePath, filePath)
  */
 export function getURLDirpath(url, ...resolvePaths)
 {
+   if (typeof url !== 'string' && !(url instanceof URL)) { throw new TypeError(`'url' is not a string or URL.`); }
+
    return upath.resolve(upath.dirname(fileURLToPath(url)), ...resolvePaths);
 }
 
 /**
  * Convenience method to convert a file URL into a file path.
  *
- * @param {string} url - A file URL
+ * @param {string | URL} url - A file URL
  *
  * @returns {string} A file path from `url`.
  */
 export function getURLFilepath(url)
 {
+   if (typeof url !== 'string' && !(url instanceof URL)) { throw new TypeError(`'url' is not a string or URL.`); }
+
    return fileURLToPath(url);
 }
 
@@ -126,6 +179,7 @@ export function getURLFilepath(url)
  */
 export async function hasFile({ dir = '.', fileList, skipDir = new Set() } = {})
 {
+   if (typeof dir !== 'string') { throw new TypeError(`'dir' is not a string.`); }
    if (!(fileList instanceof Set)) { throw new TypeError(`'fileList' is not a 'Set'`); }
    if (!(skipDir instanceof Set)) { throw new TypeError(`'skipDir' is not a 'Set'`); }
 
@@ -150,6 +204,7 @@ export async function hasFile({ dir = '.', fileList, skipDir = new Set() } = {})
  */
 export async function *walkDir(dir, skipDir = new Set())
 {
+   if (typeof dir !== 'string') { throw new TypeError(`'dir' is not a string.`); }
    if (!(skipDir instanceof Set)) { throw new TypeError(`'skipDir' is not a 'Set'`); }
 
    for await (const d of await fs.promises.opendir(dir))
@@ -181,6 +236,7 @@ export async function *walkDir(dir, skipDir = new Set())
  */
 export async function *walkFiles(dir, skipDir = new Set())
 {
+   if (typeof dir !== 'string') { throw new TypeError(`'dir' is not a string.`); }
    if (!(skipDir instanceof Set)) { throw new TypeError(`'skipDir' is not a 'Set'`); }
 
    for await (const d of await fs.promises.opendir(dir))
