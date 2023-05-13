@@ -16,7 +16,8 @@ const s_SEP = '/';
  *
  * @returns {*} Unix path.
  */
-const toUnix = (p) => {
+const toUnix = (p) =>
+{
    p = p.replace(/\\/g, "/");
    p = p.replace(/(?<!^)\/+/g, "/");
    return p;
@@ -42,9 +43,10 @@ export function commonPath(...paths)
 
    let commonPath = '';
 
-   const unixPaths = paths.map((entry, index) => {
+   const unixPaths = paths.map((entry, index) =>
+   {
       if (typeof entry !== 'string') { throw new TypeError(`'paths[${index}]' is not a string.`); }
-      return toUnix(entry)
+      return toUnix(entry);
    });
 
    const folders = [];
@@ -180,6 +182,7 @@ export function pathSort(paths, sep = s_SEP)
  * Provides a sorting function for Array.sort() for file / dir paths.
  *
  * @param {string[]}   a - left side
+ *
  * @param {string[]}   b - right side
  *
  * @returns {number} sort priority.

@@ -1,15 +1,15 @@
 /**
  * Turns an async generator into a Promise for testing.
  *
- * @param asyncGenerator
+ * @param {Function} asyncGenerator -
  *
  * @returns {Promise<void>}
  */
 async function asyncGeneratorToPromise(asyncGenerator)
 {
-   try
+   try // eslint-disable-line no-useless-catch
    {
-      for await (const _ of asyncGenerator) {}
+      for await (const _ of asyncGenerator) {} // eslint-disable-line
    }
    catch (err)
    {
