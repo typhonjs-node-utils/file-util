@@ -147,7 +147,7 @@ export function commonMappedPath(key, ...map)
  *
  * @param {string}   [sep='/'] - A string path separator.
  *
- * @returns {*} Sorted array of string paths (Unix).
+ * @returns {string[]} Sorted array of string paths (Unix).
  */
 export function pathSort(paths, sep = s_SEP)
 {
