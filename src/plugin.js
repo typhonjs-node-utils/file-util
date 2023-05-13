@@ -11,17 +11,10 @@ export function onPluginLoad(ev)
 {
    const eventbus = ev.eventbus;
 
-   const options = ev.pluginOptions;
+   const guard = true;
+   const type = 'sync'
 
-   let guard = true;
-
-   // Apply any plugin options.
-   if (typeof options === 'object')
-   {
-      if (typeof options.guard === 'boolean') { guard = options.guard; }
-   }
-
-   eventbus.on(`typhonjs:utils:file:path:common`, FUF.commonPath, void 0, { guard });
-   eventbus.on(`typhonjs:utils:file:path:common:mapped`, FUF.commonMappedPath, void 0, { guard });
-   eventbus.on(`typhonjs:utils:file:sort:path`, FUF.pathSort, void 0, { guard });
+   eventbus.on(`typhonjs:utils:file:path:common`, FUF.commonPath, void 0, { guard, type });
+   eventbus.on(`typhonjs:utils:file:path:common:mapped`, FUF.commonMappedPath, void 0, { guard, type });
+   eventbus.on(`typhonjs:utils:file:sort:path`, FUF.pathSort, void 0, { guard, type });
 }
