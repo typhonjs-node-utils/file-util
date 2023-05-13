@@ -88,9 +88,9 @@ export function commonPath(...paths)
  *
  * @param {string}   key - A key to index into each object.
  *
- * @param {...object} map - Objects containing a key to holding a path.
+ * @param {...(object | Map)} map - Objects or Maps containing a key to holding a path.
  *
- * @returns {string} The common base path.
+ * @returns {string | void} The common base path.
  */
 export function commonMappedPath(key, ...map)
 {
@@ -107,9 +107,22 @@ export function commonMappedPath(key, ...map)
 
    for (let i = 0; i < map.length; i++)
    {
-      if (map[i] === null || typeof map[i] !== 'object') { throw new TypeError(`'map[${i}]' is not an object.`); }
+      const isMap = map[i] instanceof Map;
 
-      if (typeof map[i][key] === 'string')
+      if (!isMap && (map[i] === null || typeof map[i] !== 'object'))
+      {
+         throw new TypeError(`'map[${i}]' is not an object or Map.`);
+      }
+
+      if (isMap)
+      {
+         const value = map[i].get(key);
+         if (typeof value === 'string')
+         {
+            folders.push(toUnix(value).split(s_SEP)); // Split on file separator.
+         }
+      }
+      else if (typeof map[i][key] === 'string')
       {
          folders.push(toUnix(map[i][key]).split(s_SEP)); // Split on file separator.
       }
