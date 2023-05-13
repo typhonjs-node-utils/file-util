@@ -50,17 +50,17 @@ export function run({ Module, data, chai })
 
       it(`commonMappedPath - map[0] not object (null)`, () =>
       {
-         expect(() => Module.commonMappedPath('', null)).to.throw(TypeError, `'map[0]' is not an object.`);
+         expect(() => Module.commonMappedPath('', null)).to.throw(TypeError, `'map[0]' is not an object or Map.`);
       });
 
       it(`commonMappedPath - map[0] not object (false)`, () =>
       {
-         expect(() => Module.commonMappedPath('', false)).to.throw(TypeError, `'map[0]' is not an object.`);
+         expect(() => Module.commonMappedPath('', false)).to.throw(TypeError, `'map[0]' is not an object or Map.`);
       });
 
       it(`commonMappedPath - map[1] not object (false)`, () =>
       {
-         expect(() => Module.commonMappedPath('', {}, false)).to.throw(TypeError, `'map[1]' is not an object.`);
+         expect(() => Module.commonMappedPath('', {}, false)).to.throw(TypeError, `'map[1]' is not an object or Map.`);
       });
 
       it(`pathSort - paths is not an Array`, () =>
@@ -94,6 +94,12 @@ export function run({ Module, data, chai })
          {
             await expect(Module.getDirList({ includeDir: false })).to.be.rejectedWith(TypeError,
              `'includeDir' is not a RegExp, Set, or string.`);
+         });
+
+         it(`getDirList - relative is not a string`, async () =>
+         {
+            await expect(Module.getDirList({ relative: null })).to.be.rejectedWith(TypeError,
+             `'relative' is not a string.`);
          });
 
          it(`getDirList - resolve is a boolean`, async () =>

@@ -63,7 +63,7 @@ export function run({ Module, data, chai })
       [
          { other: 1, path: '/this/is/a/test/path/one/file.js' },
          { other: 1, path: '/this/is/a/test/path/one/file2.js' },
-         { other: 1, path: '/this/is/a/test/path/two/file3.js' },
+         new Map([['other', 1], ['path', '/this/is/a/test/path/two/file3.js']]),
          { other: 1, path: '/this/is/a/test/path/two/file4.js' },
          { other: 1, path: '/this/is/a/test/path/three/file5.js' }
       ];
