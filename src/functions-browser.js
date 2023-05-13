@@ -31,25 +31,34 @@ const toUnix = (p) => {
  */
 export function commonPath(...paths)
 {
-   if (!Array.isArray(paths)) { throw new TypeError(`'paths' is not an 'array'.`); }
+   /* c8 ignore next 1 */
+   if (!Array.isArray(paths)) { throw new TypeError(`'paths' is not an array.`); }
 
-   if (paths.length <= 1) { return ''; }
+   if (paths.length === 0) { return void 0; }
+
+   if (typeof paths[0] !== 'string') { throw new TypeError(`'paths[0]' is not a string.`); }
+
+   if (paths.length === 1) { return ''; }
 
    let commonPath = '';
 
-   const unixPaths = paths.map((entry) => toUnix(entry));
+   const unixPaths = paths.map((entry, index) => {
+      if (typeof entry !== 'string') { throw new TypeError(`'paths[${index}]' is not a string.`); }
+      return toUnix(entry)
+   });
 
    const folders = [];
 
    for (let i = 0; i < unixPaths.length; i++)
    {
-      if (typeof paths[i] === 'string')
+      if (typeof unixPaths[i] === 'string')
       {
-         folders.push(paths[i].split(s_SEP));     // Split on file separator.
+         folders.push(unixPaths[i].split(s_SEP));     // Split on file separator.
       }
    }
 
-   if (folders.length === 0) { return commonPath; }
+   /* c8 ignore next 1 */
+   if (folders.length === 0) { return commonPath; } // Never reached / sanity case.
 
    for (let j = 0; j < folders[0].length; j++)
    {
@@ -58,12 +67,6 @@ export function commonPath(...paths)
 
       for (let i = 1; i < folders.length && allMatched; i++)   // Look at the other paths.
       {
-         if (folders[i].length < j)             // If there is no folder here.
-         {
-            allMatched = false;                 // No match.
-            break;                              // Reached end of folders.
-         }
-
          allMatched &= folders[i][j] === thisFolder; // Check if it matched.
       }
 
@@ -91,8 +94,12 @@ export function commonPath(...paths)
  */
 export function commonMappedPath(key, ...map)
 {
-   if (typeof key !== 'string') { throw new TypeError(`'key' is not a 'string'.`); }
-   if (!Array.isArray(map)) { throw new TypeError(`'map' is not an 'array'.`); }
+   if (typeof key !== 'string') { throw new TypeError(`'key' is not a string.`); }
+
+   /* c8 ignore next 1 */
+   if (!Array.isArray(map)) { throw new TypeError(`'map' is not an array.`); }
+
+   if (map.length === 0) { return void 0; }
 
    let commonPath = '';
 
@@ -100,6 +107,8 @@ export function commonMappedPath(key, ...map)
 
    for (let i = 0; i < map.length; i++)
    {
+      if (map[i] === null || typeof map[i] !== 'object') { throw new TypeError(`'map[${i}]' is not an object.`); }
+
       if (typeof map[i][key] === 'string')
       {
          folders.push(toUnix(map[i][key]).split(s_SEP)); // Split on file separator.
@@ -115,12 +124,6 @@ export function commonMappedPath(key, ...map)
 
       for (let i = 1; i < folders.length && allMatched; i++)   // Look at the other paths.
       {
-         if (folders[i].length < j)             // If there is no folder here.
-         {
-            allMatched = false;                 // No match.
-            break;                              // Reached end of folders.
-         }
-
          allMatched &= folders[i][j] === thisFolder; // Check if it matched.
       }
 
@@ -148,8 +151,14 @@ export function commonMappedPath(key, ...map)
  */
 export function pathSort(paths, sep = s_SEP)
 {
+   if (!Array.isArray(paths)) { throw new TypeError(`'paths' is not an array.`); }
+   if (typeof sep !== 'string') { throw new TypeError(`'sep' is not a string.`); }
+
    const unixPaths = paths.map((entry) => toUnix(entry));
-   return unixPaths.map((elem) => elem.split(sep)).sort(s_SORTER).map((elem) => elem.join(sep));
+   const sortedPaths = unixPaths.map((elem) => elem.split(sep)).sort(s_SORTER).map((elem) => elem.join(sep));
+
+   // Remove duplicates.
+   return [...new Set(sortedPaths)];
 }
 
 // Module Private ----------------------------------------------------------------------------------------------------
@@ -173,9 +182,6 @@ function s_SORTER(a, b)
       if (a[i].toUpperCase() > b[i].toUpperCase()) { return +1; }
       if (a[i].toUpperCase() < b[i].toUpperCase()) { return -1; }
    }
-
-   if (a.length < b.length) { return -1; }
-   if (a.length > b.length) { return +1; }
 
    return 0;
 }
