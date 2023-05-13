@@ -11,15 +11,7 @@ export function onPluginLoad(ev)
 {
    const eventbus = ev.eventbus;
 
-   const options = ev.pluginOptions;
-
-   let guard = true;
-
-   // Apply any plugin options.
-   if (typeof options === 'object')
-   {
-      if (typeof options.guard === 'boolean') { guard = options.guard; }
-   }
+   const guard = true;
 
    eventbus.on(`typhonjs:utils:file:dir:walk`, FUF.walkDir, void 0, { guard, type: 'async' });
    eventbus.on(`typhonjs:utils:file:file:has`, FUF.hasFile, void 0, { guard, type: 'async' });
