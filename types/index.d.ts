@@ -11,11 +11,11 @@ declare function commonPath(...paths: string[]): string;
  *
  * @param {string}   key - A key to index into each object.
  *
- * @param {...object} map - Objects containing a key to holding a path.
+ * @param {...(object | Map)} map - Objects or Maps containing a key to holding a path.
  *
- * @returns {string} The common base path.
+ * @returns {string | void} The common base path.
  */
-declare function commonMappedPath(key: string, ...map: object[]): string;
+declare function commonMappedPath(key: string, ...map: (object | Map<any, any>)[]): string | void;
 /**
  * Sorts an array of file / dir paths.
  *
@@ -23,9 +23,9 @@ declare function commonMappedPath(key: string, ...map: object[]): string;
  *
  * @param {string}   [sep='/'] - A string path separator.
  *
- * @returns {*} Sorted array of string paths (Unix).
+ * @returns {string[]} Sorted array of string paths (Unix).
  */
-declare function pathSort(paths: string[], sep?: string): any;
+declare function pathSort(paths: string[], sep?: string): string[];
 
 /**
  * Provides a few utility functions to work with files / directories.
@@ -33,59 +33,87 @@ declare function pathSort(paths: string[], sep?: string): any;
 /**
  * Returns an array of all absolute directory paths found from walking the directory indicated.
  *
- * @param {object}      options - An options object.
+ * @param {object}            [options] - An options object.
  *
- * @param {string}      [options.dir='.'] - Directory to walk; default is CWD.
+ * @param {string}            [options.dir='.'] - Directory to walk; default is CWD.
  *
- * @param {Set<string>} [options.skipDir] - An array or Set of directory names to skip walking.
+ * @param {ConditionTest}     [options.excludeDir] - A {@link ConditionTest} defining directory names to exclude.
  *
- * @param {boolean}     [options.sort=true] - Sort output array.
+ * @param {ConditionTest}     [options.includeDir] - A {@link ConditionTest} defining directory names to include.
  *
- * @returns {Promise<Array>} An array of directories.
+ * @param {string}            [options.relative] - A specific relative path to solve against.
+ *
+ * @param {boolean}           [options.resolve=false] - When true paths will be fully resolved. Note: this takes
+ *        precedence over any defined relative path.
+ *
+ * @param {boolean}           [options.sort=true] - Sort output array.
+ *
+ * @param {boolean}           [options.walk=true] - When true subdirectories are walked.
+ *
+ * @returns {Promise<string[]>} An array of directories.
  */
-declare function getDirList({ dir, skipDir, sort }?: {
+declare function getDirList({ dir, excludeDir, includeDir, relative, resolve, sort, walk }?: {
     dir?: string;
-    skipDir?: Set<string>;
+    excludeDir?: ConditionTest;
+    includeDir?: ConditionTest;
+    relative?: string;
+    resolve?: boolean;
     sort?: boolean;
-}): Promise<any[]>;
+    walk?: boolean;
+}): Promise<string[]>;
 /**
  * Returns an array of all absolute file paths found from walking the directory tree indicated.
  *
- * @param {object}      options - An options object.
+ * @param {object}         [options] - An options object.
  *
- * @param {string}      [options.dir='.'] - Directory to walk; default is CWD.
+ * @param {string}         [options.dir='.'] - Directory to walk; default is CWD.
  *
- * @param {Set<string>} [options.ext] - A set of file extensions to include.
+ * @param {ConditionTest}  [options.excludeDir] - A {@link ConditionTest} defining directory names to exclude.
  *
- * @param {Set<string>} [options.skipDir] - A Set of directory names to skip walking.
+ * @param {ConditionTest}  [options.excludeFile] - A {@link ConditionTest} defining file names to exclude.
  *
- * @param {string}      [options.skipEndsWith] - A string to exclude all paths that end with the given value.
+ * @param {ConditionTest}  [options.includeDir] - A {@link ConditionTest} defining directory names to include.
  *
- * @param {Set<string>} [options.skipExt] - A Set of file extensions to exclude.
+ * @param {ConditionTest}  [options.includeFile] - A {@link ConditionTest} defining file names to include.
  *
- * @param {boolean}     [options.sort=true] - Sort output array.
+ * @param {string}         [options.relative] - A specific relative path to solve against.
+ *
+ * @param {boolean}        [options.resolve=false] - When true paths will be fully resolved. Provide a string and
+ *        paths will be resolved against that string as a path.
+ *
+ * @param {boolean}        [options.sort=true] - Sort output array.
+ *
+ * @param {boolean}        [options.walk=true] - When true subdirectories are walked.
  *
  * @returns {Promise<string[]>} An array of resolved file paths.
  */
-declare function getFileList({ dir, ext, skipDir, skipEndsWith, skipExt, sort }?: {
+declare function getFileList({ dir, excludeDir, excludeFile, includeDir, includeFile, relative, resolve, sort, walk }?: {
     dir?: string;
-    ext?: Set<string>;
-    skipDir?: Set<string>;
-    skipEndsWith?: string;
-    skipExt?: Set<string>;
+    excludeDir?: ConditionTest;
+    excludeFile?: ConditionTest;
+    includeDir?: ConditionTest;
+    includeFile?: ConditionTest;
+    relative?: string;
+    resolve?: boolean;
     sort?: boolean;
+    walk?: boolean;
 }): Promise<string[]>;
 /**
  * Given a base path and a file path this method will return a relative path if the file path includes the base
  * path otherwise the full absolute file path is returned.
  *
- * @param {string}   basePath - The base file path to create a relative path from `filePath`
+ * @param {object}   options - Options
  *
- * @param {string}   filePath - The relative path to adjust from `basePath`.
+ * @param {string}   [options.basepath] - The base path to create a relative path from `filepath`; default is CWD.
+ *
+ * @param {string}   options.filepath - The path to solve from `basepath`.
  *
  * @returns {string} A relative path based on `basePath` and `filePath`. (Unix)
  */
-declare function getRelativePath(basePath: string, filePath: string): string;
+declare function getRelativePath({ basepath, filepath }?: {
+    basepath?: string;
+    filepath: string;
+}): string;
 /**
  * Convenience method to covert a file URL into the file path of the directory
  *
@@ -93,7 +121,8 @@ declare function getRelativePath(basePath: string, filePath: string): string;
  *
  * @param {...string} resolvePaths - An optional list of paths to resolve against the dir path.
  *
- * @returns {string} A file path based on `url` and any `resolvePaths`.
+ * @returns {string} A file path based on `url` and any `resolvePaths`. With no `resolvePaths` returns the URL
+ *          directory path.
  */
 declare function getURLDirpath(url: string | URL, ...resolvePaths: string[]): string;
 /**
@@ -109,40 +138,95 @@ declare function getURLFilepath(url: string | URL): string;
  * in an attempt to locate a Babel configuration file. If a Babel configuration file is found `true` is
  * immediately returned.
  *
- * @param {object}   options - Options object.
+ * @param {object}         [options] - Options object.
  *
- * @param {Set}      options.fileList - A Set of file names to verify existence.
+ * @param {string}         [options.dir='.'] - The directory to start walking; default is CWD / `.`.
  *
- * @param {string}   [options.dir='.'] - Directory to walk / default is CWD.
+ * @param {ConditionTest}  [options.excludeDir] - A {@link ConditionTest} defining directory names to exclude.
  *
- * @param {Set}      [options.skipDir] - A Set of directory names to skip walking.
+ * @param {ConditionTest}  [options.excludeFile] - A {@link ConditionTest} defining file names to exclude.
  *
- * @returns {Promise<boolean>} Whether a Babel configuration file was found.
+ * @param {ConditionTest}  [options.includeDir] - A {@link ConditionTest} defining directory names to include.
+ *
+ * @param {ConditionTest}  [options.includeFile] - A {@link ConditionTest} defining file names to include.
+ *
+ * @param {boolean}        [options.walk=true] - When true subdirectories are walked.
+ *
+ * @returns {Promise<boolean>} Whether a file passes the condition tests provided.
  */
-declare function hasFile({ dir, fileList, skipDir }?: {
-    fileList: Set<any>;
+declare function hasFile({ dir, excludeDir, excludeFile, includeDir, includeFile, walk }?: {
     dir?: string;
-    skipDir?: Set<any>;
+    excludeDir?: ConditionTest;
+    excludeFile?: ConditionTest;
+    includeDir?: ConditionTest;
+    includeFile?: ConditionTest;
+    walk?: boolean;
 }): Promise<boolean>;
 /**
- * A generator function that walks the local file tree.
+ * Returns whether the given filepath is a sub-path to the given base path.
  *
- * @param {string}      dir - The directory to start walking.
+ * @param {object}   options - Options.
  *
- * @param {Set<string>} [skipDir] - An array or Set of directory names to skip walking.
+ * @param {string}   [options.basepath] - The base path to test against `filepath`; default is CWD.
  *
- * @yields {string}
+ * @param {string}   options.filepath - The path to test from `basepath`.
+ *
+ * @returns {boolean} Is `filepath` a sub-path of `basepath`.
  */
-declare function walkDir(dir: string, skipDir?: Set<string>): any;
+declare function isSubpath({ basepath, filepath }?: {
+    basepath?: string;
+    filepath: string;
+}): boolean;
 /**
  * A generator function that walks the local file tree.
  *
- * @param {string}      dir - The directory to start walking.
+ * @param {object}         [options] - Options.
  *
- * @param {Set<string>} [skipDir] - An array or Set of directory names to skip walking.
+ * @param {string}         [options.dir='.'] - The directory to start walking; default is CWD / `.`.
  *
+ * @param {ConditionTest}  [options.excludeDir] - A {@link ConditionTest} defining directory names to exclude.
+ *
+ * @param {ConditionTest}  [options.includeDir] - A {@link ConditionTest} defining directory names to include.
+ *
+ * @param {boolean}        [options.walk=true] - When true subdirectories are walked.
+ *
+ * @returns {AsyncGenerator<string, void, unknown>} Generator
  * @yields {string}
  */
-declare function walkFiles(dir: string, skipDir?: Set<string>): any;
+declare function walkDir({ dir, excludeDir, includeDir, walk }?: {
+    dir?: string;
+    excludeDir?: ConditionTest;
+    includeDir?: ConditionTest;
+    walk?: boolean;
+}): AsyncGenerator<string, void, unknown>;
+/**
+ * A generator function that walks the local file tree.
+ *
+ * @param {object}         [options] - Options.
+ *
+ * @param {string}         [options.dir='.'] - The directory to start walking; default is CWD / `.`.
+ *
+ * @param {ConditionTest}  [options.excludeDir] - A {@link ConditionTest} defining directory names to exclude.
+ *
+ * @param {ConditionTest}  [options.excludeFile] - A {@link ConditionTest} defining file names to exclude.
+ *
+ * @param {ConditionTest}  [options.includeDir] - A {@link ConditionTest} defining directory names to include.
+ *
+ * @param {ConditionTest}  [options.includeFile] - A {@link ConditionTest} defining file names to include.
+ *
+ * @param {boolean}        [options.walk=true] - When true subdirectories are walked.
+ *
+ * @returns {AsyncGenerator<string, void, unknown>} Generator
+ * @yields {string}
+ */
+declare function walkFiles({ dir, excludeDir, excludeFile, includeDir, includeFile, walk }?: {
+    dir?: string;
+    excludeDir?: ConditionTest;
+    excludeFile?: ConditionTest;
+    includeDir?: ConditionTest;
+    includeFile?: ConditionTest;
+    walk?: boolean;
+}): AsyncGenerator<string, void, unknown>;
+type ConditionTest = RegExp | string | Set<string>;
 
-export { commonMappedPath, commonPath, getDirList, getFileList, getRelativePath, getURLDirpath, getURLFilepath, hasFile, pathSort, walkDir, walkFiles };
+export { ConditionTest, commonMappedPath, commonPath, getDirList, getFileList, getRelativePath, getURLDirpath, getURLFilepath, hasFile, isSubpath, pathSort, walkDir, walkFiles };

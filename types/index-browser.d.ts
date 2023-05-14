@@ -11,11 +11,11 @@ declare function commonPath(...paths: string[]): string;
  *
  * @param {string}   key - A key to index into each object.
  *
- * @param {...object} map - Objects containing a key to holding a path.
+ * @param {...(object | Map)} map - Objects or Maps containing a key to holding a path.
  *
- * @returns {string} The common base path.
+ * @returns {string | void} The common base path.
  */
-declare function commonMappedPath(key: string, ...map: object[]): string;
+declare function commonMappedPath(key: string, ...map: (object | Map<any, any>)[]): string | void;
 /**
  * Sorts an array of file / dir paths.
  *
@@ -23,8 +23,8 @@ declare function commonMappedPath(key: string, ...map: object[]): string;
  *
  * @param {string}   [sep='/'] - A string path separator.
  *
- * @returns {*} Sorted array of string paths (Unix).
+ * @returns {string[]} Sorted array of string paths (Unix).
  */
-declare function pathSort(paths: string[], sep?: string): any;
+declare function pathSort(paths: string[], sep?: string): string[];
 
 export { commonMappedPath, commonPath, pathSort };
