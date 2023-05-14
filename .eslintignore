@@ -1,1 +1,7 @@
-/test/fixtures
+.dts/
+.nyc_output/
+coverage/
+coverage/browser/
+*.d.ts
+/test/public
+/test/fixture
