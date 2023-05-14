@@ -12,7 +12,7 @@ export function onPluginLoad(ev)
    const eventbus = ev.eventbus;
 
    const guard = true;
-   const type = 'sync'
+   const type = 'sync';
 
    eventbus.on(`typhonjs:utils:file:path:common`, FUF.commonPath, void 0, { guard, type });
    eventbus.on(`typhonjs:utils:file:path:common:mapped`, FUF.commonMappedPath, void 0, { guard, type });
