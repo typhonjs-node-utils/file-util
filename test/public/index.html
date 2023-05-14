@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Mocha Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="mocha.css" />
+</head>
+<body>
+<div id="mocha"></div>
+
+<script type="module">
+   import * as Module           from './FileUtil.js';
+
+   import TestSuiteRunner       from './TestsuiteRunner.js';
+
+   const data = {
+      suitePrefix: 'browser',
+      isBrowser: true
+   };
+
+   TestSuiteRunner.run({ Module, data });
+</script>
+</body>
+</html>

@@ -114,6 +114,12 @@ export function run({ Module, data, chai })
              `'sort' is not a boolean.`);
          });
 
+         it(`getDirList - walk is a boolean`, async () =>
+         {
+            await expect(Module.getDirList({ walk: null })).to.be.rejectedWith(TypeError,
+             `'walk' is not a boolean.`);
+         });
+
 
          it(`getFileList - dir not string`, async () =>
          {
@@ -145,6 +151,12 @@ export function run({ Module, data, chai })
              `'includeFile' is not a RegExp, Set, or string.`);
          });
 
+         it(`getFileList - relative is a string`, async () =>
+         {
+            await expect(Module.getFileList({ relative: null })).to.be.rejectedWith(TypeError,
+             `'relative' is not a string.`);
+         });
+
          it(`getFileList - resolve is a boolean`, async () =>
          {
             await expect(Module.getFileList({ resolve: null })).to.be.rejectedWith(TypeError,
@@ -157,15 +169,23 @@ export function run({ Module, data, chai })
              `'sort' is not a boolean.`);
          });
 
+         it(`getFileList - walk is a boolean`, async () =>
+         {
+            await expect(Module.getFileList({ walk: null })).to.be.rejectedWith(TypeError,
+             `'walk' is not a boolean.`);
+         });
+
 
          it(`getRelativePath - basepath is not a string`, () =>
          {
-            expect(() => Module.getRelativePath(false)).to.throw(TypeError, `'basepath' is not a string.`);
+            expect(() => Module.getRelativePath({ basepath: false })).to.throw(TypeError,
+             `'basepath' is not a string.`);
          });
 
          it(`getRelativePath - filepath is not a string`, () =>
          {
-            expect(() => Module.getRelativePath('', false)).to.throw(TypeError, `'filepath' is not a string.`);
+            expect(() => Module.getRelativePath({ filepath: false })).to.throw(TypeError,
+             `'filepath' is not a string.`);
          });
 
 
@@ -211,6 +231,24 @@ export function run({ Module, data, chai })
              `'includeFile' is not a RegExp, Set, or string.`);
          });
 
+         it(`hasFile - walk is not a boolean`, async () =>
+         {
+            await expect(Module.hasFile({ walk: null })).to.be.rejectedWith(TypeError, `'walk' is not a boolean.`);
+         });
+
+
+         it(`isSubpath - basepath is not a string`, () =>
+         {
+            expect(() => Module.isSubpath({ basepath: false })).to.throw(TypeError,
+             `'basepath' is not a string.`);
+         });
+
+         it(`isSubpath - filepath is not a string`, () =>
+         {
+            expect(() => Module.isSubpath({ filepath: false })).to.throw(TypeError,
+             `'filepath' is not a string.`);
+         });
+
 
          it(`walkDir - dir not string`, async () =>
          {
@@ -228,6 +266,12 @@ export function run({ Module, data, chai })
          {
             await expect(asyncGeneratorToPromise(Module.walkDir({ includeDir: false }))).to.be.rejectedWith(
              TypeError, `'includeDir' is not a RegExp, Set, or string.`);
+         });
+
+         it(`walkDir - walk is not a boolean`, async () =>
+         {
+            await expect(asyncGeneratorToPromise(Module.walkDir({ walk: null }))).to.be.rejectedWith(
+             TypeError, `'walk' is not a boolean.`);
          });
 
 
@@ -259,6 +303,12 @@ export function run({ Module, data, chai })
          {
             await expect(asyncGeneratorToPromise(Module.walkFiles({ includeFile: false }))).to.be.rejectedWith(
              TypeError, `'includeFile' is not a RegExp, Set, or string.`);
+         });
+
+         it(`walkFiles - walk is not a boolean`, async () =>
+         {
+            await expect(asyncGeneratorToPromise(Module.walkFiles({ walk: null }))).to.be.rejectedWith(
+             TypeError, `'walk' is not a boolean.`);
          });
       });
    }
