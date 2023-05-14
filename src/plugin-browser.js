@@ -22,6 +22,7 @@ export function onPluginLoad(ev)
    eventbus.on(`typhonjs:utils:file:path:common:mapped`, FUF.commonMappedPath, void 0, { guard, type: 'sync' });
    eventbus.on(`typhonjs:utils:file:path:relative:get`, FUF.getRelativePath, void 0, { guard, type: 'sync' });
    eventbus.on(`typhonjs:utils:file:sort:path`, FUF.pathSort, void 0, { guard, type: 'sync' });
+   eventbus.on(`typhonjs:utils:file:subpath:is`, FUF.isSubpath, void 0, { guard, type: 'sync' });
    eventbus.on(`typhonjs:utils:file:url:path:dir:get`, FUF.getURLDirpath, void 0, { guard, type: 'sync' });
    eventbus.on(`typhonjs:utils:file:url:path:file:get`, FUF.getURLFilepath, void 0, { guard, type: 'sync' });
 }
