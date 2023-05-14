@@ -6,4 +6,9 @@ npm-debug.log
 *-error.log
 /.nyc_output
 /coverage
+/coverage-browser
+/env
 node_modules
+/test/public/FileUtil.js
+/test/public/FileUtil.js.map
+/test/public/TestsuiteRunner.js
