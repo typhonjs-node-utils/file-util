@@ -371,21 +371,21 @@ export function run({ Module, data, chai })
       {
          const result = Module.getURLDirpath(data.filepathURL);
 
-         assert.isTrue(result.endsWith('/test/fixture/one'))
+         assert.isTrue(result.endsWith('/test/fixture/one'));
       });
 
       it(`URL string`, () =>
       {
          const result = Module.getURLDirpath(data.filepathURLString);
 
-         assert.isTrue(result.endsWith('/test/fixture/one'))
+         assert.isTrue(result.endsWith('/test/fixture/one'));
       });
 
       it(`URL + relative path`, () =>
       {
          const result = Module.getURLDirpath(data.filepathURL, '../test.txt');
 
-         assert.isTrue(result.endsWith('/test/fixture/test.txt'))
+         assert.isTrue(result.endsWith('/test/fixture/test.txt'));
       });
    });
 
@@ -395,14 +395,14 @@ export function run({ Module, data, chai })
       {
          const result = Module.getURLFilepath(data.filepathURL);
 
-         assert.isTrue(result.endsWith('/test/fixture/one/file1.txt'))
+         assert.isTrue(result.endsWith('/test/fixture/one/file1.txt'));
       });
 
       it(`URL string`, () =>
       {
          const result = Module.getURLFilepath(data.filepathURLString);
 
-         assert.isTrue(result.endsWith('/test/fixture/one/file1.txt'))
+         assert.isTrue(result.endsWith('/test/fixture/one/file1.txt'));
       });
    });
 
