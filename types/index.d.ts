@@ -48,7 +48,7 @@ declare function pathSort(paths: string[], sep?: string): string[];
  *
  * @param {boolean}           [options.sort=true] - Sort output array.
  *
- * @param {boolean}           [options.walk=true] - When true subdirectories are walked.
+ * @param {boolean}           [options.walk=false] - When true subdirectories are walked.
  *
  * @returns {Promise<string[]>} An array of directories.
  */
@@ -83,7 +83,7 @@ declare function getDirList({ dir, excludeDir, includeDir, relative, resolve, so
  *
  * @param {boolean}        [options.sort=true] - Sort output array.
  *
- * @param {boolean}        [options.walk=true] - When true subdirectories are walked.
+ * @param {boolean}        [options.walk=false] - When true subdirectories are walked.
  *
  * @returns {Promise<string[]>} An array of resolved file paths.
  */

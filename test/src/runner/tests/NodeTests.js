@@ -58,54 +58,55 @@ export function run({ Module, data, chai })
 
       it(`retrieve all directories`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture' }), fixtureDirList);
+         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', walk: true }), fixtureDirList);
       });
 
       it(`excludeDir - regex (no 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', excludeDir: /level-\d/ }),
+         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', excludeDir: /level-\d/, walk: true }),
           fixtureDirListNoLevel3);
       });
 
       it(`excludeDir - Set (no 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', excludeDir: new Set(['level-3']) }),
-          fixtureDirListNoLevel3);
+         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', excludeDir: new Set(['level-3']),
+          walk: true }), fixtureDirListNoLevel3);
       });
 
       it(`excludeDir - string (no 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', excludeDir: 'level-3' }),
+         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', excludeDir: 'level-3', walk: true }),
           fixtureDirListNoLevel3);
       });
 
       it(`includeDir - regex (only 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', includeDir: /level-\d/ }),
+         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', includeDir: /level-\d/, walk: true }),
           fixtureDirListOnlyLevel3);
       });
 
       it(`includeDir - Set (only 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', includeDir: new Set(['level-3']) }),
-          fixtureDirListOnlyLevel3);
+         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', includeDir: new Set(['level-3']),
+          walk: true }), fixtureDirListOnlyLevel3);
       });
 
       it(`includeDir - string (only 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', includeDir: 'level-3' }),
+         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', includeDir: 'level-3', walk: true }),
           fixtureDirListOnlyLevel3);
       });
 
       it(`retrieve level-3 directories and relative ('.')`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', includeDir: 'level-3', relative: '.' }),
-          fixtureDirListOnlyLevel3Rel);
+         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', includeDir: 'level-3', relative: '.',
+          walk: true }), fixtureDirListOnlyLevel3Rel);
       });
 
       it(`retrieve level-3 directories and resolve`, async () =>
       {
-         const results = await Module.getDirList({ dir: './test/fixture', includeDir: 'level-3', resolve: true });
+         const results = await Module.getDirList({ dir: './test/fixture', includeDir: 'level-3', resolve: true,
+          walk: true });
 
          assert.equal(results.length, fixtureDirListOnlyLevel3Resolve.length);
 
@@ -118,12 +119,12 @@ export function run({ Module, data, chai })
 
       it(`retrieve all directories - no sort`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', sort: false }), fixtureDirList);
+         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', sort: false, walk: true }), fixtureDirList);
       });
 
       it(`retrieve all directories - no walk`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', walk: false }), fixtureDirListOnlyTopLevel);
+         assert.deepEqual(await Module.getDirList({ dir: './test/fixture' }), fixtureDirListOnlyTopLevel);
       });
    });
 
@@ -247,84 +248,85 @@ export function run({ Module, data, chai })
 
       it(`retrieve all files`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture' }), fixtureFileList);
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', walk: true }), fixtureFileList);
       });
 
       it(`excludeDir - regex (no 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeDir: /level-\d/ }),
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeDir: /level-\d/, walk: true }),
           fixtureFileListNoLevel3);
       });
 
       it(`excludeDir - Set (no 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeDir: new Set(['level-3']) }),
-          fixtureFileListNoLevel3);
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeDir: new Set(['level-3']),
+          walk: true }), fixtureFileListNoLevel3);
       });
 
       it(`excludeDir - string (no 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeDir: 'level-3' }),
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeDir: 'level-3', walk: true }),
           fixtureFileListNoLevel3);
       });
 
       it(`excludeDir - string (not 'A')`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeDir: 'A' }),
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeDir: 'A', walk: true }),
           fixtureFileListNotADir);
       });
 
       it(`excludeFile - regex (not '.extra.txt')`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeFile: /\.extra\.txt$/ }),
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeFile: /\.extra\.txt$/, walk: true }),
           fixtureFileListNoExtraTxt);
       });
 
       it(`excludeFile - Set (not 'fileA.txt' or 'fileB.txt')`, async () =>
       {
          assert.deepEqual(await Module.getFileList({ dir: './test/fixture',
-          excludeFile: new Set(['fileA.txt', 'fileB.txt']) }), fixtureFileListNoFileAOrB);
+          excludeFile: new Set(['fileA.txt', 'fileB.txt']), walk: true }), fixtureFileListNoFileAOrB);
       });
 
       it(`excludeFile - string (not 'fileA.txt')`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeFile: 'fileA.txt' }),
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', excludeFile: 'fileA.txt', walk: true }),
           fixtureFileListNoFileA);
       });
 
       it(`includeDir - regex (only 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', includeDir: /level-\d/ }),
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', includeDir: /level-\d/, walk: true }),
           fixtureFileListOnlyLevel3);
       });
 
       it(`includeDir - Set (only 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', includeDir: new Set(['level-3']) }),
-          fixtureFileListOnlyLevel3);
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', includeDir: new Set(['level-3']),
+          walk: true }), fixtureFileListOnlyLevel3);
       });
 
       it(`includeDir - string (only 'level-3')`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', includeDir: 'level-3' }),
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', includeDir: 'level-3', walk: true }),
           fixtureFileListOnlyLevel3);
       });
 
       it(`includeFile - retrieve files ending in '.extra.txt'`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', includeFile: /\.extra\.txt$/ }),
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', includeFile: /\.extra\.txt$/, walk: true }),
           fixtureFileListEndsWithExtraTxt);
       });
 
       it(`retrieve level-3 files and relative ('.')`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', includeDir: 'level-3', relative: '.' }),
-          fixtureFileListOnlyLevel3Rel);
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture', includeDir: 'level-3', relative: '.',
+          walk: true }), fixtureFileListOnlyLevel3Rel);
       });
 
       it(`retrieve level-3 files and resolve`, async () =>
       {
-         const results = await Module.getFileList({ dir: './test/fixture', includeDir: 'level-3', resolve: true });
+         const results = await Module.getFileList({ dir: './test/fixture', includeDir: 'level-3', resolve: true,
+          walk: true });
 
          assert.equal(results.length, fixtureFileListOnlyLevel3Resolve.length);
 
@@ -338,12 +340,12 @@ export function run({ Module, data, chai })
       it(`retrieve all files - no sort`, async () =>
       {
          // We don't test a specific result as there are variations across OSes in native file order.
-         assert.isDefined(await Module.getFileList({ dir: './test/fixture', sort: false }));
+         assert.isDefined(await Module.getFileList({ dir: './test/fixture', sort: false, walk: true }));
       });
 
       it(`retrieve all files in 'one' - no walk`, async () =>
       {
-         assert.deepEqual(await Module.getFileList({ dir: './test/fixture/one', walk: false }), ['file1.txt']);
+         assert.deepEqual(await Module.getFileList({ dir: './test/fixture/one' }), ['file1.txt']);
       });
    });
 

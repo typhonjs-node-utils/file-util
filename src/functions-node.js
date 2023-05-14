@@ -27,12 +27,12 @@ import { pathSort }      from './functions-browser.js';
  *
  * @param {boolean}           [options.sort=true] - Sort output array.
  *
- * @param {boolean}           [options.walk=true] - When true subdirectories are walked.
+ * @param {boolean}           [options.walk=false] - When true subdirectories are walked.
  *
  * @returns {Promise<string[]>} An array of directories.
  */
 export async function getDirList({ dir = '.', excludeDir, includeDir, relative, resolve = false, sort = true,
- walk = true } = {})
+ walk = false } = {})
 {
    if (typeof dir !== 'string') { throw new TypeError(`'dir' is not a string.`); }
 
@@ -82,12 +82,12 @@ export async function getDirList({ dir = '.', excludeDir, includeDir, relative, 
  *
  * @param {boolean}        [options.sort=true] - Sort output array.
  *
- * @param {boolean}        [options.walk=true] - When true subdirectories are walked.
+ * @param {boolean}        [options.walk=false] - When true subdirectories are walked.
  *
  * @returns {Promise<string[]>} An array of resolved file paths.
  */
 export async function getFileList({ dir = '.', excludeDir, excludeFile, includeDir, includeFile, relative,
- resolve = false, sort = true, walk = true } = {})
+ resolve = false, sort = true, walk = false } = {})
 {
    if (typeof dir !== 'string') { throw new TypeError(`'dir' is not a string.`); }
 
