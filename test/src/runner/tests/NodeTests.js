@@ -441,6 +441,24 @@ export function run({ Module, data, chai })
       });
    });
 
+   describe(`Node / isDirectory tests (${data.suitePrefix})`, () =>
+   {
+      it(`valid directory path`, () => assert.isTrue(Module.isDirectory('./test/fixture')));
+
+      it(`invalid directory path`, () => assert.isFalse(Module.isDirectory('./test/fixture/one/file1.txt')));
+
+      it(`invalid directory path from bad data`, () => assert.isFalse(Module.isDirectory(null)));
+   });
+
+   describe(`Node / isFile tests (${data.suitePrefix})`, () =>
+   {
+      it(`valid file path`, () => assert.isTrue(Module.isFile('./test/fixture/one/file1.txt')));
+
+      it(`invalid file path`, () => assert.isFalse(Module.isFile('./test/fixture')));
+
+      it(`invalid directory path from bad data`, () => assert.isFalse(Module.isFile(null)));
+   });
+
    describe(`Node / isSubpath tests (${data.suitePrefix})`, () =>
    {
       it(`filepath w/ default basepath`, async () =>
