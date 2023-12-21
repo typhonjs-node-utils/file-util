@@ -1,7 +1,7 @@
 {
   "name": "@typhonjs-utils/file-util",
   "description": "Provides several utility functions for working with the file system including a TyphonJS plugin.",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
   "exports": {
@@ -16,8 +16,9 @@
       }
     },
     "./plugin": {
-       "browser": "./src/plugin-browser.js",
-       "node": "./src/plugin.js"
+      "types": "./types/index-plugin.d.ts",
+      "browser": "./src/plugin-browser.js",
+      "node": "./src/plugin.js"
     },
     "./package.json": "./package.json"
   },
@@ -28,11 +29,12 @@
     "upath": "^2"
   },
   "devDependencies": {
+    "@typhonjs-build-test/esm-d-ts": "^0.1.1",
     "@typhonjs-build-test/node-browser": "^0.0.3",
     "rollup": "^3"
   },
   "engines": {
-    "node": ">=14.18"
+    "node": ">=18"
   },
   "files": [
     "/npm-shrinkwrap.json",
@@ -55,6 +57,6 @@
     "posttest-browser": "nyc report --exclude-after-remap=true --reporter=lcov --reporter=text-summary --report-dir=coverage-browser",
     "test-browser": "node ./test/src/browser/run.js",
     "test-node": "c8 --exclude-after-remap=true --reporter=lcov --reporter=text-summary mocha -colors \"test/src/node/**/*.test.js\" --timeout 16000",
-    "types": "node -e \"import('@typhonjs-build-test/esm-d-ts').then(module => { module.generateDTS({ input: './src/index.js', output: './types/index.d.ts' }); module.generateDTS({ input: './src/functions-browser.js', output: './types/index-browser.d.ts' }) });\""
+    "types": "esm-d-ts gen src/index.js -o types/index.d.ts && esm-d-ts gen src/functions-browser.js -o types/index-browser.d.ts && esm-d-ts gen src/plugin.js -o types/index-plugin.d.ts"
   }
 }
