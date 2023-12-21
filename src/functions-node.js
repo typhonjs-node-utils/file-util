@@ -218,6 +218,46 @@ export async function hasFile({ dir = '.', excludeDir, excludeFile, includeDir, 
 }
 
 /**
+ * Checks if given path is a directory.
+ *
+ * @param {string}   path - Path to check.
+ *
+ * @returns {boolean} Returns if the given path is a directory.
+ */
+export function isDirectory(path)
+{
+   try
+   {
+      const stats = fs.statSync(path);
+      return stats.isDirectory();
+   }
+   catch (err)
+   {
+      return false;
+   }
+}
+
+/**
+ * Checks if given path is a file.
+ *
+ * @param {string}   path - Path to check.
+ *
+ * @returns {boolean} Returns if the given path is a file.
+ */
+export function isFile(path)
+{
+   try
+   {
+      const stats = fs.statSync(path);
+      return stats.isFile();
+   }
+   catch (err)
+   {
+      return false;
+   }
+}
+
+/**
  * Returns whether the given filepath is a sub-path to the given base path.
  *
  * @param {object}   options - Options.
