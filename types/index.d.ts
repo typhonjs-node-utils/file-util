@@ -163,6 +163,22 @@ declare function hasFile({ dir, excludeDir, excludeFile, includeDir, includeFile
     walk?: boolean;
 }): Promise<boolean>;
 /**
+ * Checks if given path is a directory.
+ *
+ * @param {string}   path - Path to check.
+ *
+ * @returns {boolean} Returns if the given path is a directory.
+ */
+declare function isDirectory(path: string): boolean;
+/**
+ * Checks if given path is a file.
+ *
+ * @param {string}   path - Path to check.
+ *
+ * @returns {boolean} Returns if the given path is a file.
+ */
+declare function isFile(path: string): boolean;
+/**
  * Returns whether the given filepath is a sub-path to the given base path.
  *
  * @param {object}   options - Options.
@@ -229,4 +245,4 @@ declare function walkFiles({ dir, excludeDir, excludeFile, includeDir, includeFi
 }): AsyncGenerator<string, void, unknown>;
 type ConditionTest = RegExp | string | Set<string>;
 
-export { ConditionTest, commonMappedPath, commonPath, getDirList, getFileList, getRelativePath, getURLDirpath, getURLFilepath, hasFile, isSubpath, pathSort, walkDir, walkFiles };
+export { ConditionTest, commonMappedPath, commonPath, getDirList, getFileList, getRelativePath, getURLDirpath, getURLFilepath, hasFile, isDirectory, isFile, isSubpath, pathSort, walkDir, walkFiles };
