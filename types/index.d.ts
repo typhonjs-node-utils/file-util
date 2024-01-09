@@ -245,4 +245,4 @@ declare function walkFiles({ dir, excludeDir, excludeFile, includeDir, includeFi
 }): AsyncGenerator<string, void, unknown>;
 type ConditionTest = RegExp | string | Set<string>;
 
-export { ConditionTest, commonMappedPath, commonPath, getDirList, getFileList, getRelativePath, getURLDirpath, getURLFilepath, hasFile, isDirectory, isFile, isSubpath, pathSort, walkDir, walkFiles };
+export { type ConditionTest, commonMappedPath, commonPath, getDirList, getFileList, getRelativePath, getURLDirpath, getURLFilepath, hasFile, isDirectory, isFile, isSubpath, pathSort, walkDir, walkFiles };
