@@ -119,7 +119,14 @@ export function run({ Module, data, chai })
 
       it(`retrieve all directories - no sort`, async () =>
       {
-         assert.deepEqual(await Module.getDirList({ dir: './test/fixture', sort: false, walk: true }), fixtureDirList);
+         // Not all OSes will return the same order of files so test against a set.
+         const dirListSet = new Set(fixtureDirList);
+
+         const dirList = await Module.getDirList({ dir: './test/fixture', sort: false, walk: true });
+
+         assert.equal(dirListSet.size, dirList.length);
+
+         for (const entry of dirList) { assert.isTrue(dirListSet.has(entry)); }
       });
 
       it(`retrieve all directories - no walk`, async () =>
