@@ -2,6 +2,7 @@
 .nyc_output/
 coverage/
 coverage/browser/
-*.d.ts
+docs/
 /test/public
 /test/fixture
+*.d.ts
