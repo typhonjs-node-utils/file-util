@@ -1,7 +1,7 @@
 {
   "name": "@typhonjs-utils/file-util",
   "description": "Provides several utility functions for working with the file system including a TyphonJS plugin.",
-  "version": "0.0.11",
+  "version": "0.1.0",
   "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
   "exports": {
@@ -47,11 +47,20 @@
     "utils",
     "file"
   ],
+  "typedocOptions": {
+    "dmtLinksService": {
+      "Discord": "https://typhonjs.io/discord/",
+      "GitHub": "https://github.com/typhonjs-node-utils/file-util",
+      "NPM": "https://www.npmjs.com/package/@typhonjs-utils/file-util"
+    }
+  },
   "license": "MPL-2.0",
-  "bugs": "https://github.com/typhonjs-node-utils/file-util/issues",
   "repository": "github:typhonjs-node-utils/file-util",
+  "bugs": "https://github.com/typhonjs-node-utils/file-util/issues",
+  "apidocs": "https://typhonjs-node-utils.github.io/file-util/",
   "scripts": {
     "eslint": "eslint .",
+    "docs": "typedoc-pkg --api-link esm",
     "prepublishOnly": "npm run eslint && npm run types && npm run test-node && npm run test-browser",
     "pretest-browser": "rollup --config rollup.config.browser-test.js",
     "posttest-browser": "nyc report --exclude-after-remap=true --reporter=lcov --reporter=text-summary --report-dir=coverage-browser",
