@@ -1,7 +1,7 @@
 {
   "name": "@typhonjs-utils/file-util",
   "description": "Provides several utility functions for working with the file system including a TyphonJS plugin.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
   "exports": {
@@ -26,15 +26,15 @@
     "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)"
   ],
   "dependencies": {
-    "upath": "^2"
+    "pathe": "^2"
   },
   "devDependencies": {
     "@typhonjs-build-test/node-browser": "^0.0.5",
-    "@typhonjs-typedoc/typedoc-pkg": "^0.0.2",
-    "rollup": "^4.9.4"
+    "@typhonjs-typedoc/typedoc-pkg": "^0.4.1",
+    "rollup": "^4.59.0"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "files": [
     "/npm-shrinkwrap.json",
@@ -60,7 +60,7 @@
   "apidocs": "https://typhonjs-node-utils.github.io/file-util/",
   "scripts": {
     "eslint": "eslint .",
-    "docs": "typedoc-pkg --api-link esm",
+    "docs": "typedoc-pkg --api-link es",
     "prepublishOnly": "npm run eslint && npm run types && npm run test-node && npm run test-browser",
     "pretest-browser": "rollup --config rollup.config.browser-test.js",
     "posttest-browser": "nyc report --exclude-after-remap=true --reporter=lcov --reporter=text-summary --report-dir=coverage-browser",
