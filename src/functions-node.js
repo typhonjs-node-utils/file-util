@@ -1,7 +1,7 @@
 import fs                from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import upath             from 'upath';
+import path              from 'pathe';
 
 import { pathSort }      from './functions-browser.js';
 
@@ -48,13 +48,13 @@ export async function getDirList({ dir = '.', excludeDir, includeDir, relative, 
 
    if (resolve)
    {
-      for await (const p of walkDir({ dir, excludeDir, includeDir, walk })) { results.push(upath.resolve(p)); }
+      for await (const p of walkDir({ dir, excludeDir, includeDir, walk })) { results.push(path.resolve(p)); }
    }
    else // Handle relative case.
    {
       const source = typeof relative === 'string' ? relative : dir;
 
-      for await (const p of walkDir({ dir, excludeDir, includeDir, walk })) { results.push(upath.relative(source, p)); }
+      for await (const p of walkDir({ dir, excludeDir, includeDir, walk })) { results.push(path.relative(source, p)); }
    }
 
    return sort ? pathSort(results) : results;
@@ -107,7 +107,7 @@ export async function getFileList({ dir = '.', excludeDir, excludeFile, includeD
    {
       for await (const p of walkFiles({ dir, excludeDir, excludeFile, includeDir, includeFile, walk }))
       {
-         results.push(upath.resolve(p));
+         results.push(path.resolve(p));
       }
    }
    else
@@ -116,7 +116,7 @@ export async function getFileList({ dir = '.', excludeDir, excludeFile, includeD
 
       for await (const p of walkFiles({ dir, excludeDir, excludeFile, includeDir, includeFile, walk }))
       {
-         results.push(upath.relative(source, p));
+         results.push(path.relative(source, p));
       }
    }
 
@@ -140,7 +140,7 @@ export function getRelativePath({ basepath = '.', filepath } = {})
    if (typeof basepath !== 'string') { throw new TypeError(`'basepath' is not a string.`); }
    if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a string.`); }
 
-   return upath.toUnix(upath.relative(basepath, filepath));
+   return path.relative(basepath, filepath);
 }
 
 /**
@@ -157,7 +157,7 @@ export function getURLDirpath(url, ...resolvePaths)
 {
    if (typeof url !== 'string' && !(url instanceof URL)) { throw new TypeError(`'url' is not a string or URL.`); }
 
-   return upath.resolve(upath.dirname(fileURLToPath(url)), ...resolvePaths);
+   return path.resolve(path.dirname(fileURLToPath(url)), ...resolvePaths);
 }
 
 /**
@@ -171,7 +171,7 @@ export function getURLFilepath(url)
 {
    if (typeof url !== 'string' && !(url instanceof URL)) { throw new TypeError(`'url' is not a string or URL.`); }
 
-   return upath.toUnix(fileURLToPath(url));
+   return path.normalize(fileURLToPath(url));
 }
 
 /**
@@ -274,8 +274,8 @@ export function isSubpath({ basepath = '.', filepath } = {})
    if (typeof filepath !== 'string') { throw new TypeError(`'filepath' is not a string.`); }
 
    // Normalize and resolve paths to get absolute paths.
-   const absoluteBasepath = upath.resolve(upath.normalize(basepath));
-   const absolutePath = upath.resolve(upath.normalize(filepath));
+   const absoluteBasepath = path.resolve(path.normalize(basepath));
+   const absolutePath = path.resolve(path.normalize(filepath));
 
    // Check if absolutePath starts with absoluteBasepath.
    return absolutePath.startsWith(absoluteBasepath);
@@ -321,7 +321,7 @@ export async function *walkDir({ dir = '.', excludeDir, includeDir, walk = true 
          if (includeDir && !testCondition(includeDir, d.name)) { yieldEntry = false; }
       }
 
-      const entry = upath.join(dir, d.name);
+      const entry = path.join(dir, d.name);
 
       if (d.isDirectory())
       {
@@ -364,7 +364,7 @@ export async function *walkFiles({ dir = '.', excludeDir, excludeFile, includeDi
 
    for await (const d of await fs.promises.opendir(dir))
    {
-      const entry = upath.join(dir, d.name);
+      const entry = path.join(dir, d.name);
 
       if (d.isDirectory())
       {
@@ -380,7 +380,7 @@ export async function *walkFiles({ dir = '.', excludeDir, excludeFile, includeDi
       {
          let yieldEntry = true;
 
-         const dirBasename = upath.basename(dir);
+         const dirBasename = path.basename(dir);
 
          if (includeDir && !testCondition(includeDir, dirBasename)) { yieldEntry = false; }
 
