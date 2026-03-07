@@ -9,8 +9,8 @@
 [![Discord](https://img.shields.io/discord/737953117999726592?label=TyphonJS%20Discord)](https://typhonjs.io/discord/)
 [![Twitch](https://img.shields.io/twitch/status/typhonrt?style=social)](https://www.twitch.tv/typhonrt)
 
-Provides several utility functions for working with the file system. Additionally, there are path manipulation 
-functions that work on Node and in the browser.
+Provides several utility functions for working with file systems with Posix compliance. Additionally, there are path
+manipulation functions that work on Node and in the browser.
 
 [API documentation](https://typhonjs-node-utils.github.io/file-util/)
 
