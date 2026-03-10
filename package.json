@@ -55,7 +55,9 @@
     }
   },
   "license": "MPL-2.0",
-  "repository": "github:typhonjs-node-utils/file-util",
+  "repository": {
+    "url": "git+https://github.com/typhonjs-node-utils/file-util.git"
+  },
   "bugs": "https://github.com/typhonjs-node-utils/file-util/issues",
   "apidocs": "https://typhonjs-node-utils.github.io/file-util/",
   "scripts": {
