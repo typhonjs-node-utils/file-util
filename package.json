@@ -1,24 +1,29 @@
 {
   "name": "@typhonjs-utils/file-util",
   "description": "Provides several utility functions for working with the file system including a TyphonJS plugin.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
   "exports": {
     ".": {
+      "browser": {
+        "types": "./types/index-browser.d.ts",
+        "import": "./src/functions-browser.js"
+      },
       "node": {
         "types": "./types/index.d.ts",
         "import": "./src/index.js"
       },
-      "browser": {
-        "types": "./types/index-browser.d.ts",
-        "import": "./src/functions-browser.js"
+      "default": {
+        "types": "./types/index.d.ts",
+        "import": "./src/index.js"
       }
     },
     "./plugin": {
       "types": "./types/index-plugin.d.ts",
       "browser": "./src/plugin-browser.js",
-      "node": "./src/plugin.js"
+      "node": "./src/plugin.js",
+      "default": "./src/plugin.js"
     },
     "./package.json": "./package.json"
   },
