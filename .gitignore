@@ -9,6 +9,7 @@ npm-debug.log
 /coverage-browser
 /env
 node_modules
+/test/fixture/output
 /test/public/FileUtil.js
 /test/public/FileUtil.js.map
 /test/public/TestsuiteRunner.js
