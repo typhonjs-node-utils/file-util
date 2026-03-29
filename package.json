@@ -1,7 +1,7 @@
 {
   "name": "@typhonjs-utils/file-util",
   "description": "Provides several utility functions for working with the file system including a TyphonJS plugin.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
   "type": "module",
   "exports": {
@@ -34,9 +34,10 @@
     "pathe": "^2"
   },
   "devDependencies": {
+    "@types/node": "^24.1.0",
     "@typhonjs-build-test/node-browser": "^0.0.5",
     "@typhonjs-typedoc/typedoc-pkg": "^0.4.1",
-    "rollup": "^4.59.0"
+    "rollup": "^4.60.0"
   },
   "engines": {
     "node": ">=18"
@@ -57,7 +58,16 @@
       "Discord": "https://typhonjs.io/discord/",
       "GitHub": "https://github.com/typhonjs-node-utils/file-util",
       "NPM": "https://www.npmjs.com/package/@typhonjs-utils/file-util"
-    }
+    },
+    "externalSymbolLinkMappings": {
+      "@types/node": {
+        "Stream.Readable": "https://nodejs.org/api/stream.html#class-streamreadable",
+        "Stream.Writable": "https://nodejs.org/api/stream.html#class-streamwritable"
+      }
+    },
+    "projectDocuments": [
+      "./CHANGELOG.md"
+    ]
   },
   "license": "MPL-2.0",
   "repository": {
