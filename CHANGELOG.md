@@ -1,4 +1,7 @@
 # Changelog
+## 0.3.0 release
+- Added `createReadable`, `createWritable`, and `isFileGzip` functions.
+
 ## 0.2.1 release
 - Add `default` export conditions mirroring the `node` condition.
 
