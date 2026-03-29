@@ -1,3 +1,5 @@
+import * as node_stream from 'node:stream';
+
 /**
  * Finds the common base path of a collection of paths.
  *
@@ -30,6 +32,40 @@ declare function pathSort(paths: string[], sep?: string): string[];
 /**
  * Provides a few utility functions to work with files / directories.
  */
+/**
+ * Creates a readable stream for a file transparently handling gzip decompression when required.
+ *
+ * The file is inspected using magic bytes and not the extension to determine whether gzip decompression should be
+ * applied. The returned stream is always a Node `Readable` suitable for consumption by parsing pipelines.
+ *
+ * @param {object}   options - Options.
+ *
+ * @param {string}   options.filepath - Input file path.
+ *
+ * @returns {import('node:stream').Readable} A readable stream yielding decompressed or raw file contents.
+ *
+ * @throws {Error} If the file cannot be opened or read.
+ */
+declare function createReadable({ filepath }: {
+    filepath: string;
+}): node_stream.Readable;
+/**
+ * Creates a writable output stream to a file transparently handling optional gzip compression.
+ *
+ * @param {object}   options - Options.
+ *
+ * @param {string}   options.filepath - Output file path.
+ *
+ * @param {boolean}  [options.compress] - When `true`, gzip compression is enabled; default: `false`
+ *
+ * @returns {import('node:stream').Writable} A writable stream with optional gzip compression.
+ *
+ * @throws {Error} If the filepath is already an existing directory.
+ */
+declare function createWritable({ filepath, compress }: {
+    filepath: string;
+    compress?: boolean;
+}): node_stream.Writable;
 /**
  * Returns an array of all absolute directory paths found from walking the directory indicated.
  *
@@ -179,6 +215,17 @@ declare function isDirectory(path: string): boolean;
  */
 declare function isFile(path: string): boolean;
 /**
+ * Determines whether a file is gzip-compressed by inspecting its magic bytes.
+ *
+ * Reads the first two bytes of the file and checks for the gzip signature (0x1f, 0x8b). This avoids relying on file
+ * extensions and allows safe conditional decompression in stream pipelines.
+ *
+ * @param {string} path - Absolute or relative file path to test.
+ *
+ * @returns {boolean} `true` if the file appears to be gzip-compressed; otherwise `false`.
+ */
+declare function isFileGzip(path: string): boolean;
+/**
  * Returns whether the given filepath is a sub-path to the given base path.
  *
  * @param {object}   options - Options.
@@ -245,4 +292,5 @@ declare function walkFiles({ dir, excludeDir, excludeFile, includeDir, includeFi
 }): AsyncGenerator<string, void, unknown>;
 type ConditionTest = RegExp | string | Set<string>;
 
-export { type ConditionTest, commonMappedPath, commonPath, getDirList, getFileList, getRelativePath, getURLDirpath, getURLFilepath, hasFile, isDirectory, isFile, isSubpath, pathSort, walkDir, walkFiles };
+export { commonMappedPath, commonPath, createReadable, createWritable, getDirList, getFileList, getRelativePath, getURLDirpath, getURLFilepath, hasFile, isDirectory, isFile, isFileGzip, isSubpath, pathSort, walkDir, walkFiles };
+export type { ConditionTest };
