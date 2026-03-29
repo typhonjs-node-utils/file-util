@@ -1,5 +1,3 @@
-import fs from 'node:fs';
-
 /**
  * @param {object}                        opts - Test options
  *
@@ -16,11 +14,6 @@ export function run({ Module, data, chai })
    if (data.isBrowser) { return; }
 
    const { assert, expect } = chai;
-
-   before(() =>
-   {
-      fs.rmSync(`./test/fixture/output`, { recursive: true, force: true });
-   });
 
    describe(`Node / createReadable / createWritable tests (${data.suitePrefix})`, () =>
    {

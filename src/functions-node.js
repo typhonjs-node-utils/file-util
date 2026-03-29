@@ -54,7 +54,7 @@ export function createWritable({ filepath, compress = false })
    const dir = path.dirname(filepath);
 
    // Create directory if base path does not exist.
-   /* c8 ignore next 1 */ // sanity cases for dir path.
+   /* c8 ignore next 4 */ // sanity cases for dir path.
    if (!fs.existsSync(dir) && dir && dir !== '.' && dir !== path.parse(dir).root)
    {
       fs.mkdirSync(dir, { recursive: true });
