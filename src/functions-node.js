@@ -1,13 +1,73 @@
-import fs                from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import fs                  from 'node:fs';
+import { fileURLToPath }   from 'node:url';
+import zlib                from 'node:zlib';
 
-import path              from 'pathe';
+import path                from 'pathe';
 
-import { pathSort }      from './functions-browser.js';
+import { pathSort }        from './functions-browser.js';
 
 /**
  * Provides a few utility functions to work with files / directories.
  */
+
+/**
+ * Creates a readable stream for a file transparently handling gzip decompression when required.
+ *
+ * The file is inspected using magic bytes and not the extension to determine whether gzip decompression should be
+ * applied. The returned stream is always a Node `Readable` suitable for consumption by parsing pipelines.
+ *
+ * @param {object}   options - Options.
+ *
+ * @param {string}   options.filepath - Input file path.
+ *
+ * @returns {import('node:stream').Readable} A readable stream yielding decompressed or raw file contents.
+ *
+ * @throws {Error} If the file cannot be opened or read.
+ */
+export function createReadable({ filepath })
+{
+   const isGzip = isFileGzip(filepath);
+
+   const input = fs.createReadStream(filepath);
+
+   return isGzip ? input.pipe(zlib.createGunzip()) : input;
+}
+
+/**
+ * Creates a writable output stream to a file transparently handling optional gzip compression.
+ *
+ * @param {object}   options - Options.
+ *
+ * @param {string}   options.filepath - Output file path.
+ *
+ * @param {boolean}  [options.compress] - When `true`, gzip compression is enabled; default: `false`
+ *
+ * @returns {import('node:stream').Writable} A writable stream with optional gzip compression.
+ *
+ * @throws {Error} If the filepath is already an existing directory.
+ */
+export function createWritable({ filepath, compress = false })
+{
+   /* c8 ignore next 1 */ // Sanity case.
+   if (isDirectory(filepath)) { throw new Error(`'filepath' is an existing directory.`); }
+
+   const dir = path.dirname(filepath);
+
+   // Create directory if base path does not exist.
+   /* c8 ignore next 1 */ // sanity cases for dir path.
+   if (!fs.existsSync(dir) && dir && dir !== '.' && dir !== path.parse(dir).root)
+   {
+      fs.mkdirSync(dir, { recursive: true });
+   }
+
+   const out = fs.createWriteStream(filepath);
+
+   const sink = compress ? zlib.createGzip({ level: 9 }) : out;
+
+   if (compress) { sink.pipe(out); }
+
+   return sink;
+}
 
 /**
  * Returns an array of all absolute directory paths found from walking the directory indicated.
@@ -250,6 +310,33 @@ export function isFile(path)
    {
       const stats = fs.statSync(path);
       return stats.isFile();
+   }
+   catch (err)
+   {
+      return false;
+   }
+}
+
+/**
+ * Determines whether a file is gzip-compressed by inspecting its magic bytes.
+ *
+ * Reads the first two bytes of the file and checks for the gzip signature (0x1f, 0x8b). This avoids relying on file
+ * extensions and allows safe conditional decompression in stream pipelines.
+ *
+ * @param {string} path - Absolute or relative file path to test.
+ *
+ * @returns {boolean} `true` if the file appears to be gzip-compressed; otherwise `false`.
+ */
+export function isFileGzip(path)
+{
+   try
+   {
+      const fd = fs.openSync(path, 'r');
+      const buf = Buffer.alloc(2);
+      fs.readSync(fd, buf, 0, 2, 0);
+      fs.closeSync(fd);
+
+      return buf[0] === 0x1f && buf[1] === 0x8b;
    }
    catch (err)
    {
