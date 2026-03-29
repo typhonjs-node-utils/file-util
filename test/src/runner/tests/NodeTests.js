@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+
 /**
  * @param {object}                        opts - Test options
  *
@@ -13,7 +15,72 @@ export function run({ Module, data, chai })
 
    if (data.isBrowser) { return; }
 
-   const { assert } = chai;
+   const { assert, expect } = chai;
+
+   before(() =>
+   {
+      fs.rmSync(`./test/fixture/output`, { recursive: true, force: true });
+   });
+
+   describe(`Node / createReadable / createWritable tests (${data.suitePrefix})`, () =>
+   {
+      it(`can write then read (not compressed)`, async () =>
+      {
+         const output = Module.createWritable({ filepath: './test/fixture/output/writable/test.txt' });
+
+         output.write('This is test text.');
+
+         const endPromise = new Promise((resolve, reject) =>
+         {
+            output.once('finish', resolve);
+            output.once('error', reject);
+         });
+
+         output.end();
+         await endPromise;
+
+         const input = Module.createReadable({ filepath: './test/fixture/output/writable/test.txt' });
+
+         let result = '';
+
+         for await (const chunk of input)
+         {
+            result += typeof chunk === 'string' ? chunk : chunk.toString('utf-8');
+         }
+
+         expect(result).to.equal('This is test text.');
+      });
+
+      it(`can write then read (compressed)`, async () =>
+      {
+         const output = Module.createWritable({
+            filepath: './test/fixture/output/writable/test.txt.gz',
+            compress: true
+         });
+
+         output.write('This is test text.');
+
+         const endPromise = new Promise((resolve, reject) =>
+         {
+            output.once('end', resolve);
+            output.once('error', reject);
+         });
+
+         output.end();
+         await endPromise;
+
+         const input = Module.createReadable({ filepath: './test/fixture/output/writable/test.txt.gz' });
+
+         let result = '';
+
+         for await (const chunk of input)
+         {
+            result += typeof chunk === 'string' ? chunk : chunk.toString('utf-8');
+         }
+
+         expect(result).to.equal('This is test text.');
+      });
+   });
 
    describe(`Node / getDirList tests (${data.suitePrefix})`, () =>
    {
@@ -466,6 +533,11 @@ export function run({ Module, data, chai })
       it(`invalid file path`, () => assert.isFalse(Module.isFile(fileTreeDir)));
 
       it(`invalid directory path from bad data`, () => assert.isFalse(Module.isFile(null)));
+   });
+
+   describe(`Node / isFileGzip tests (${data.suitePrefix})`, () =>
+   {
+      it(`invalid file path`, () => assert.isFalse(Module.isFileGzip(null)));
    });
 
    describe(`Node / isSubpath tests (${data.suitePrefix})`, () =>
