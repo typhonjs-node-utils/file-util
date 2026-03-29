@@ -24,7 +24,10 @@ export function onPluginLoad(ev)
    eventbus.on(`typhonjs:utils:file:sort:path`, FUF.pathSort, void 0, { guard, type: 'sync' });
    eventbus.on(`typhonjs:utils:file:directory:is`, FUF.isDirectory, void 0, { guard, type: 'sync' });
    eventbus.on(`typhonjs:utils:file:file:is`, FUF.isFile, void 0, { guard, type: 'sync' });
+   eventbus.on(`typhonjs:utils:file:file:is:gzip`, FUF.isFileGzip, void 0, { guard, type: 'sync' });
+   eventbus.on(`typhonjs:utils:file:readable:create`, FUF.createReadable, void 0, { guard, type: 'sync' });
    eventbus.on(`typhonjs:utils:file:subpath:is`, FUF.isSubpath, void 0, { guard, type: 'sync' });
    eventbus.on(`typhonjs:utils:file:url:path:dir:get`, FUF.getURLDirpath, void 0, { guard, type: 'sync' });
    eventbus.on(`typhonjs:utils:file:url:path:file:get`, FUF.getURLFilepath, void 0, { guard, type: 'sync' });
+   eventbus.on(`typhonjs:utils:file:writable:create`, FUF.createWritable, void 0, { guard, type: 'sync' });
 }
